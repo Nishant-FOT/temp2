@@ -941,8 +941,9 @@ def screen_1_alert_dashboard(result):
                 xaxis_title='Day',
                 yaxis=dict(
                     title='Daily Burn ($)',  # Updated y-axis label for clarity
-                    title_standoff=20,  # Add spacing to move the label away from the graph
+                    title_standoff=30,  # Increased spacing for better readability
                     tickformat=',.0f',  # Ensure Y-axis values match the graph data
+                    tickprefix='$',  # Add dollar sign prefix to Y-axis values
                     showgrid=True,
                     gridcolor='rgba(148, 163, 184, 0.2)',
                     gridwidth=1,
@@ -953,11 +954,11 @@ def screen_1_alert_dashboard(result):
                 height=300,
                 hovermode='x unified',
                 legend=dict(
-                    x=1.05,  # Move legend slightly away from the graph
+                    x=1.1,  # Move legend further away from the graph
                     y=1,
                     xanchor='left',
                     yanchor='top',
-                    font=dict(size=12)
+                    font=dict(size=14)  # Increase font size for better readability
                 )
             )
             st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
