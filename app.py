@@ -20,61 +20,239 @@ st.set_page_config(
 )
 
 # Custom CSS for better styling
+# Custom CSS for glassmorphism styling
 st.markdown("""
-    <style>
-    .metric-card {
-        background-color: #f0f2f6;
-        padding: 15px;
-        border-radius: 8px;
-        margin: 10px 0;
-    }
-    .alert-critical {
-        background-color: #ffcccc;
-        color: #111827;
-        padding: 15px;
-        border-radius: 8px;
-        border-left: 4px solid #cc0000;
-    }
-    .alert-high {
-        background-color: #ffe6cc;
-        color: #111827;
-        padding: 15px;
-        border-radius: 8px;
-        border-left: 4px solid #ff6600;
-    }
-    .alert-medium {
-        background-color: #ffffcc;
-        color: #111827;
-        padding: 15px;
-        border-radius: 8px;
-        border-left: 4px solid #ffcc00;
-    }
-    .alert-safe {
-        background-color: #ccffcc;
-        color: #111827;
-        padding: 15px;
-        border-radius: 8px;
-        border-left: 4px solid #00cc00;
-    }
-    .alert-critical h3, .alert-critical p, .alert-critical strong,
-    .alert-high h3, .alert-high p, .alert-high strong,
-    .alert-medium h3, .alert-medium p, .alert-medium strong,
-    .alert-safe h3, .alert-safe p, .alert-safe strong {
-        color: inherit;
-    }
-    .briefing-card {
-        background-color: #f8f9fa;
-        color: #111827;
-        padding: 20px;
-        border-radius: 8px;
-        line-height: 1.8;
-        font-size: 16px;
-        border: 1px solid #d1d5db;
-    }
-    </style>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --bg-main: #07111f;
+    --bg-secondary: #0f172a;
+    --bg-panel: rgba(15, 23, 42, 0.60);
+    --bg-panel-strong: rgba(15, 23, 42, 0.78);
+    --border-soft: rgba(148, 163, 184, 0.18);
+    --border-accent: rgba(103, 232, 249, 0.25);
+    --text-main: #e2e8f0;
+    --text-soft: #94a3b8;
+    --accent-cyan: #22d3ee;
+    --accent-blue: #60a5fa;
+    --accent-violet: #8b5cf6;
+    --success: #22c55e;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+}
+
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+}
+
+.stApp {
+    background:
+        radial-gradient(circle at 15% 20%, rgba(34, 211, 238, 0.16), transparent 26%),
+        radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.14), transparent 28%),
+        radial-gradient(circle at 60% 80%, rgba(59, 130, 246, 0.10), transparent 30%),
+        linear-gradient(135deg, #040812 0%, #0b1220 45%, #111827 100%);
+    color: var(--text-main);
+}
+
+.block-container {
+    padding-top: 1.1rem;
+    padding-bottom: 2rem;
+    max-width: 1450px;
+}
+
+h1, h2, h3, h4 {
+    color: #f8fafc !important;
+    letter-spacing: -0.02em;
+}
+
+p, label, li, span {
+    color: var(--text-main);
+}
+
+section[data-testid="stSidebar"] {
+    background:
+        linear-gradient(180deg, rgba(7, 17, 31, 0.96) 0%, rgba(15, 23, 42, 0.92) 100%);
+    border-right: 1px solid var(--border-soft);
+    backdrop-filter: blur(14px);
+}
+
+section[data-testid="stSidebar"] * {
+    color: #dbeafe !important;
+}
+
+section[data-testid="stSidebar"] .stButton > button {
+    background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+    color: white !important;
+    border: none;
+    border-radius: 14px;
+    font-weight: 700;
+    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.30);
+    transition: all 0.25s ease;
+}
+
+section[data-testid="stSidebar"] .stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 16px 38px rgba(59, 130, 246, 0.40);
+}
+
+div[data-baseweb="select"] > div,
+div[data-baseweb="input"] > div,
+div[data-testid="stTextInput"] input,
+div[data-testid="stNumberInput"] input,
+div[data-testid="stTextArea"] textarea {
+    background: rgba(15, 23, 42, 0.72) !important;
+    border: 1px solid var(--border-soft) !important;
+    border-radius: 14px !important;
+    color: var(--text-main) !important;
+    backdrop-filter: blur(10px);
+}
+
+.stTabs [data-baseweb="tab-list"] {
+    gap: 10px;
+    background: rgba(15, 23, 42, 0.50);
+    border: 1px solid var(--border-soft);
+    border-radius: 18px;
+    padding: 8px;
+    backdrop-filter: blur(12px);
+}
+
+.stTabs [data-baseweb="tab"] {
+    height: 46px;
+    border-radius: 12px;
+    color: #cbd5e1;
+    font-weight: 600;
+    background: transparent;
+    transition: all 0.25s ease;
+}
+
+.stTabs [aria-selected="true"] {
+    background: linear-gradient(90deg, rgba(34, 211, 238, 0.18), rgba(139, 92, 246, 0.18));
+    color: white !important;
+    border: 1px solid var(--border-accent);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+div[data-testid="stMetric"] {
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.64), rgba(15, 23, 42, 0.82));
+    border: 1px solid var(--border-soft);
+    border-radius: 18px;
+    padding: 14px 16px;
+    box-shadow: 0 12px 28px rgba(2, 6, 23, 0.26);
+    backdrop-filter: blur(14px);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+}
+
+div[data-testid="stMetric"]:hover {
+    transform: translateY(-4px);
+    border-color: rgba(96, 165, 250, 0.35);
+    box-shadow: 0 18px 36px rgba(14, 165, 233, 0.18);
+}
+
+div[data-testid="stMetricLabel"] {
+    color: var(--text-soft) !important;
+    font-weight: 600;
+}
+
+div[data-testid="stMetricValue"] {
+    color: #f8fafc !important;
+    font-weight: 800;
+}
+
+div[data-testid="stMetricDelta"] {
+    color: #bfdbfe !important;
+}
+
+.alert-critical, .alert-high, .alert-medium, .alert-safe {
+    padding: 20px;
+    border-radius: 20px;
+    border-left: 4px solid;
+    backdrop-filter: blur(14px);
+    box-shadow: 0 14px 32px rgba(2, 6, 23, 0.28);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.alert-critical:hover, .alert-high:hover, .alert-medium:hover, .alert-safe:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(2, 6, 23, 0.34);
+}
+
+.alert-critical {
+    background: linear-gradient(135deg, rgba(127, 29, 29, 0.76), rgba(31, 41, 55, 0.88));
+    color: #fee2e2;
+    border-left-color: #ef4444;
+}
+
+.alert-high {
+    background: linear-gradient(135deg, rgba(124, 45, 18, 0.76), rgba(31, 41, 55, 0.88));
+    color: #ffedd5;
+    border-left-color: #f97316;
+}
+
+.alert-medium {
+    background: linear-gradient(135deg, rgba(113, 63, 18, 0.76), rgba(31, 41, 55, 0.88));
+    color: #fef3c7;
+    border-left-color: #f59e0b;
+}
+
+.alert-safe {
+    background: linear-gradient(135deg, rgba(20, 83, 45, 0.76), rgba(31, 41, 55, 0.88));
+    color: #dcfce7;
+    border-left-color: #22c55e;
+}
+
+.alert-critical h3, .alert-critical p, .alert-critical strong,
+.alert-high h3, .alert-high p, .alert-high strong,
+.alert-medium h3, .alert-medium p, .alert-medium strong,
+.alert-safe h3, .alert-safe p, .alert-safe strong {
+    color: inherit !important;
+}
+
+.briefing-card {
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.68), rgba(17, 24, 39, 0.84));
+    color: #e5eefc;
+    padding: 24px;
+    border-radius: 20px;
+    line-height: 1.9;
+    font-size: 16px;
+    border: 1px solid var(--border-soft);
+    backdrop-filter: blur(14px);
+    box-shadow: 0 14px 36px rgba(2, 6, 23, 0.30);
+    transition: transform 0.22s ease, box-shadow 0.22s ease;
+}
+
+.briefing-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(2, 6, 23, 0.36);
+}
+
+div[data-testid="stDataFrame"] {
+    background: rgba(15, 23, 42, 0.52);
+    border: 1px solid var(--border-soft);
+    border-radius: 18px;
+    padding: 8px;
+    backdrop-filter: blur(12px);
+}
+
+.js-plotly-plot {
+    background: rgba(15, 23, 42, 0.42);
+    border: 1px solid rgba(148, 163, 184, 0.10);
+    border-radius: 18px;
+    padding: 8px;
+    backdrop-filter: blur(10px);
+}
+
+[data-testid="stInfo"], [data-testid="stWarning"], [data-testid="stSuccess"], [data-testid="stError"] {
+    border-radius: 16px;
+    border: 1px solid var(--border-soft);
+    backdrop-filter: blur(12px);
+}
+
+hr {
+    border-color: rgba(148, 163, 184, 0.10);
+}
+</style>
 """, unsafe_allow_html=True)
-
-
 @st.cache_resource
 def get_orchestrator():
     """Initialize orchestrator (cached)."""
