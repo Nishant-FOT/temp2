@@ -941,14 +941,24 @@ def screen_1_alert_dashboard(result):
                 xaxis_title='Day',
                 yaxis=dict(
                     title='Daily Burn ($)',  # Updated y-axis label for clarity
-                    tickformat='$,',  # Ensure proper formatting of y-axis values
+                    title_standoff=20,  # Add spacing to move the label away from the graph
+                    tickformat=',.0f',  # Ensure Y-axis values match the graph data
                     showgrid=True,
                     gridcolor='rgba(148, 163, 184, 0.2)',
-                    zeroline=True,
+                    gridwidth=1,
+                    showline=False,
+                    zeroline=False,
                     zerolinecolor='rgba(148, 163, 184, 0.4)',
                 ),
                 height=300,
-                hovermode='x unified'
+                hovermode='x unified',
+                legend=dict(
+                    x=1.05,  # Move legend slightly away from the graph
+                    y=1,
+                    xanchor='left',
+                    yanchor='top',
+                    font=dict(size=12)
+                )
             )
             st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
 
