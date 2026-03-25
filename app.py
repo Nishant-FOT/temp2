@@ -586,41 +586,46 @@ inject_glass_theme()
 
 
 def style_plotly_figure(fig):
-    """Apply a shared glassmorphism theme to Plotly figures."""
+    """Apply a clean, minimal theme to Plotly figures."""
     fig.update_layout(
         paper_bgcolor="rgba(0, 0, 0, 0)",
-        plot_bgcolor="rgba(8, 20, 36, 0.36)",
-        font=dict(color="#dbe7f5", family="Manrope, sans-serif"),
-        title=dict(font=dict(color="#f7fbff", family="Space Grotesk, sans-serif", size=20)),
+        plot_bgcolor="rgba(0, 0, 0, 0)",
+        font=dict(color="#95a8c4", family="Manrope, sans-serif", size=12),
+        title=dict(font=dict(color="#dbe7f5", family="Space Grotesk, sans-serif", size=16), x=0.02, xanchor="left"),
         legend=dict(
-            bgcolor="rgba(8, 20, 36, 0.28)",
-            bordercolor="rgba(255, 255, 255, 0.12)",
-            borderwidth=1,
-            font=dict(color="#dbe7f5")
+            bgcolor="rgba(0, 0, 0, 0)",
+            bordercolor="rgba(255, 255, 255, 0.08)",
+            borderwidth=0,
+            font=dict(color="#95a8c4", size=11),
+            x=0.02,
+            y=0.98,
+            xanchor="left",
+            yanchor="top"
         ),
         hoverlabel=dict(
-            bgcolor="rgba(3, 9, 21, 0.95)",
-            bordercolor="rgba(255, 255, 255, 0.14)",
-            font=dict(color="#f7fbff")
+            bgcolor="rgba(8, 20, 36, 0.92)",
+            bordercolor="rgba(255, 255, 255, 0.12)",
+            font=dict(color="#dbe7f5", size=12)
         ),
-        margin=dict(l=16, r=16, t=64, b=16),
+        margin=dict(l=12, r=12, t=40, b=12),
+        showlegend=True,
     )
-    fig.update_annotations(font=dict(color="#f7fbff"))
+    fig.update_annotations(font=dict(color="#95a8c4", size=11))
     fig.update_xaxes(
-        showgrid=True,
-        gridcolor="rgba(148, 163, 184, 0.14)",
-        linecolor="rgba(148, 163, 184, 0.16)",
+        showgrid=False,
+        showline=False,
         zeroline=False,
-        title_font=dict(color="#dbe7f5"),
-        tickfont=dict(color="#dbe7f5"),
+        title_font=dict(color="#95a8c4", size=11),
+        tickfont=dict(color="#95a8c4", size=10),
     )
     fig.update_yaxes(
         showgrid=True,
-        gridcolor="rgba(148, 163, 184, 0.14)",
-        linecolor="rgba(148, 163, 184, 0.16)",
+        gridcolor="rgba(148, 163, 184, 0.08)",
+        gridwidth=1,
+        showline=False,
         zeroline=False,
-        title_font=dict(color="#dbe7f5"),
-        tickfont=dict(color="#dbe7f5"),
+        title_font=dict(color="#95a8c4", size=11),
+        tickfont=dict(color="#95a8c4", size=10),
     )
     return fig
 
@@ -632,7 +637,7 @@ def render_app_hero(result=None):
         compliance = result.get('compliance_analysis', {}).get('kpis', {})
         hero_copy = (
             "Scenario-aware spend, liquidity, planning, and close operations are running in the same "
-            "control surface. Inputs stay in the sidebar and all workspaces remain unchanged."
+            "control surface."
         )
         chips = [
             str(result.get('sector', 'n/a')).replace('_', ' ').title(),
@@ -649,9 +654,9 @@ def render_app_hero(result=None):
         eyebrow = "Live Finance Scenario"
     else:
         hero_copy = (
-            "Glassmorphism restyle applied to the existing CFO workflow. Configure a scenario in the "
-            "sidebar, run the pipeline, and use the same seven workspaces with a new visual system."
-        )
+            "This app simulates a CFO operating system with integrated AI-native finance modules. "
+            )
+        
         chips = [
             "Spend Intelligence",
             "Cash Forecasting",
@@ -698,7 +703,7 @@ def render_empty_state():
             <h3 class="panel-title">Configure the scenario, then run the finance stack.</h3>
             <p class="panel-copy">
                 The app structure stays intact: Alert Dashboard, Agent Reasoning, CFO Briefing, FP&A,
-                Overview, Compliance, and Strategic Planning. This refresh changes presentation only.
+                Overview, Compliance, and Strategic Planning.
             </p>
         </section>
         <section class="landing-grid">
@@ -905,7 +910,7 @@ def screen_1_alert_dashboard(result):
                 y='Anomaly Score',
                 color='Anomaly Score',
                 color_continuous_scale='RdYlGn_r',
-                height=350,
+                height=300,
                 title='Spending Anomaly Scores by Category'
             )
             fig.update_xaxes(tickangle=45)
@@ -924,16 +929,18 @@ def screen_1_alert_dashboard(result):
             fig.add_trace(go.Scatter(
                 x=df_forecast['Day'],
                 y=df_forecast['Daily Burn'],
-                mode='lines+markers',
+                mode='lines',
                 name='Projected Daily Burn',
-                line=dict(color='#ff6600', width=2),
-                fill='tozeroy'
+                line=dict(color='#38bdf8', width=3, shape='spline'),
+                fill='tozeroy',
+                fillcolor='rgba(56, 189, 248, 0.16)',
+                hovertemplate='<b>Day %{x}</b><br>Daily Burn: $%{y:,.0f}<extra></extra>'
             ))
             fig.update_layout(
                 title='30-Day Cashflow Forecast',
                 xaxis_title='Day',
                 yaxis_title='Daily Burn ($)',
-                height=350,
+                height=300,
                 hovermode='x unified'
             )
             st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
@@ -1095,7 +1102,7 @@ def screen_3_cfo_briefing(result):
                 x=monte_carlo['days'],
                 y=path,
                 mode='lines',
-                line=dict(color='rgba(100, 116, 139, 0.16)', width=1),
+                line=dict(color='rgba(100, 116, 139, 0.08)', width=1, shape='spline'),
                 name='Sample Path' if idx == 0 else None,
                 showlegend=(idx == 0),
                 hoverinfo='skip'
@@ -1118,7 +1125,7 @@ def screen_3_cfo_briefing(result):
             y=monte_carlo['p10_cash'],
             mode='lines',
             fill='tonexty',
-            fillcolor='rgba(251, 191, 36, 0.20)',
+            fillcolor='rgba(245, 158, 11, 0.12)',
             line=dict(color='rgba(245, 158, 11, 0)'),
             name='P10-P90 Range',
             hoverinfo='skip'
@@ -1128,7 +1135,7 @@ def screen_3_cfo_briefing(result):
             y=monte_carlo['p50_cash'],
             mode='lines',
             name='Baseline Median Path',
-            line=dict(color='#dc2626', width=3)
+            line=dict(color='#f59e0b', width=3, shape='spline')
         ))
 
         if peer_monte_carlo.get('days'):
@@ -1149,7 +1156,7 @@ def screen_3_cfo_briefing(result):
                 y=peer_monte_carlo['p10_cash'],
                 mode='lines',
                 fill='tonexty',
-                fillcolor='rgba(59, 130, 246, 0.12)',
+                fillcolor='rgba(59, 130, 246, 0.08)',
                 line=dict(color='rgba(37, 99, 235, 0)'),
                 name='Peer Cohort Range',
                 hoverinfo='skip'
@@ -1159,7 +1166,7 @@ def screen_3_cfo_briefing(result):
                 y=peer_monte_carlo['p50_cash'],
                 mode='lines',
                 name='Peer Cohort Median',
-                line=dict(color='#2563eb', width=2, dash='dash')
+                line=dict(color='#2563eb', width=2, dash='dash', shape='spline')
             ))
 
         if action_monte_carlo.get('days'):
@@ -1180,7 +1187,7 @@ def screen_3_cfo_briefing(result):
                 y=action_monte_carlo['p10_cash'],
                 mode='lines',
                 fill='tonexty',
-                fillcolor='rgba(56, 189, 248, 0.18)',
+                fillcolor='rgba(56, 189, 248, 0.12)',
                 line=dict(color='rgba(14, 165, 233, 0)'),
                 name='Recommended Action Range',
                 hoverinfo='skip'
@@ -1190,20 +1197,20 @@ def screen_3_cfo_briefing(result):
                 y=action_monte_carlo['p50_cash'],
                 mode='lines',
                 name='Recommended Action Median',
-                line=dict(color='#0369a1', width=3, dash='dot')
+                line=dict(color='#38bdf8', width=3, dash='dot', shape='spline')
             ))
 
         max_abs_cash = max([abs(value) for value in chart_values], default=0)
         y_axis_limit = max(1000, max_abs_cash * 1.1)
 
-        fig.add_hrect(y0=0, y1=y_axis_limit, fillcolor='rgba(34, 197, 94, 0.06)', line_width=0)
-        fig.add_hrect(y0=-y_axis_limit, y1=0, fillcolor='rgba(239, 68, 68, 0.06)', line_width=0)
-        fig.add_hline(y=0, line_dash='dash', line_color='#111827')
+        fig.add_hrect(y0=0, y1=y_axis_limit, fillcolor='rgba(34, 197, 94, 0.04)', line_width=0)
+        fig.add_hrect(y0=-y_axis_limit, y1=0, fillcolor='rgba(239, 68, 68, 0.04)', line_width=0)
+        fig.add_hline(y=0, line_dash='dash', line_color='rgba(148, 163, 184, 0.16)')
         fig.update_layout(
             title='30-Day Cash Balance Scenarios: Baseline vs Recommended Action',
             xaxis_title='Day',
             yaxis_title='Cash Balance ($)',
-            height=420,
+            height=380,
             hovermode='x unified',
             yaxis=dict(range=[-y_axis_limit, y_axis_limit], zeroline=False)
         )
@@ -1268,20 +1275,20 @@ def screen_3_cfo_briefing(result):
             breach_chart.add_trace(go.Scatter(
                 x=monte_carlo['days'],
                 y=breach_curve,
-                mode='lines+markers',
+                mode='lines',
                 name='Baseline Breach Probability',
-                line=dict(color='#dc2626', width=3),
-                marker=dict(size=6)
+                line=dict(color='#f59e0b', width=3, shape='spline'),
+                fill='tozeroy',
+                fillcolor='rgba(245, 158, 11, 0.1)'
             ))
             action_breach_curve = action_monte_carlo.get('breach_probability_curve', [])
             if action_breach_curve:
                 breach_chart.add_trace(go.Scatter(
                     x=action_monte_carlo['days'],
                     y=action_breach_curve,
-                    mode='lines+markers',
+                    mode='lines',
                     name='Recommended Action Breach Probability',
-                    line=dict(color='#0369a1', width=3, dash='dot'),
-                    marker=dict(size=6)
+                    line=dict(color='#38bdf8', width=3, dash='dot', shape='spline')
                 ))
             if peer_monte_carlo.get('breach_probability_curve'):
                 breach_chart.add_trace(go.Scatter(
@@ -1289,14 +1296,14 @@ def screen_3_cfo_briefing(result):
                     y=peer_monte_carlo['breach_probability_curve'],
                     mode='lines',
                     name='Peer Cohort Breach Probability',
-                    line=dict(color='#2563eb', width=2, dash='dash')
+                    line=dict(color='#2563eb', width=2, dash='dash', shape='spline')
                 ))
             breach_chart.update_layout(
                 title='Cumulative Probability of Cash Breach by Day',
                 xaxis_title='Day',
                 yaxis_title='Probability',
                 yaxis=dict(range=[0, 1.05], tickformat='.0%'),
-                height=320,
+                height=300,
                 hovermode='x unified'
             )
             st.plotly_chart(style_plotly_figure(breach_chart), use_container_width=True, theme=None)
@@ -1398,7 +1405,7 @@ def screen_4_fpa_workbench(result):
             color_continuous_scale='RdYlGn_r',
             title='Month-to-Date Budget Variance by Category'
         )
-        chart.update_layout(height=360)
+        chart.update_layout(height=300)
         st.plotly_chart(style_plotly_figure(chart), use_container_width=True, theme=None)
         st.dataframe(
             variance_df.style.format({
@@ -1439,12 +1446,12 @@ def screen_4_fpa_workbench(result):
             x=scenario_df['Scenario'],
             y=scenario_df['30d End Cash'],
             name='30d End Cash',
-            marker_color=['#9ca3af', '#0369a1', '#dc2626']
+            marker_color=['#64748b', '#38bdf8', '#f59e0b']
         ))
         scenario_chart.update_layout(
             title='Scenario Comparison: 30-Day Ending Cash',
             yaxis_title='Cash ($)',
-            height=350
+            height=300
         )
         st.plotly_chart(style_plotly_figure(scenario_chart), use_container_width=True, theme=None)
 
@@ -1456,16 +1463,17 @@ def screen_4_fpa_workbench(result):
         sensitivity_chart.add_trace(go.Scatter(
             x=sensitivity_df['scenario'],
             y=sensitivity_df['end_cash'],
-            mode='lines+markers',
-            line=dict(color='#7c3aed', width=3),
-            marker=dict(size=9),
+            mode='lines',
+            line=dict(color='#7dd3fc', width=3, shape='spline'),
+            fill='tozeroy',
+            fillcolor='rgba(125, 211, 252, 0.12)',
             name='Ending Cash'
         ))
         sensitivity_chart.update_layout(
             title='Ending Cash Sensitivity to Burn Rate Changes',
             xaxis_title='Sensitivity Scenario',
             yaxis_title='30d End Cash ($)',
-            height=320
+            height=300
         )
         st.plotly_chart(style_plotly_figure(sensitivity_chart), use_container_width=True, theme=None)
         st.dataframe(
@@ -1488,17 +1496,17 @@ def screen_4_fpa_workbench(result):
             x=tornado_df['delta_end_cash'],
             y=tornado_df['driver'],
             orientation='h',
-            marker_color=['#dc2626' if value < 0 else '#16a34a' for value in tornado_df['delta_end_cash']],
+            marker_color=['#f59e0b' if value < 0 else '#38bdf8' for value in tornado_df['delta_end_cash']],
             text=tornado_df['shock'],
             textposition='outside',
             name='End Cash Delta'
         ))
-        tornado_chart.add_vline(x=0, line_dash='dash', line_color='#111827')
+        tornado_chart.add_vline(x=0, line_dash='dash', line_color='rgba(148, 163, 184, 0.16)')
         tornado_chart.update_layout(
             title='Tornado View: End-Cash Sensitivity by Planning Driver',
             xaxis_title='Delta vs Baseline End Cash ($)',
             yaxis_title='Driver',
-            height=340,
+            height=320,
             showlegend=False
         )
         st.plotly_chart(style_plotly_figure(tornado_chart), use_container_width=True, theme=None)
@@ -1522,7 +1530,7 @@ def screen_4_fpa_workbench(result):
             go.Bar(
                 x=stress_df['scenario'],
                 y=stress_df['end_cash'],
-                marker_color=['#0f766e', '#f59e0b', '#dc2626'],
+                marker_color=['#64748b', '#38bdf8', '#f59e0b'],
                 name='End Cash'
             ),
             secondary_y=False,
@@ -1531,11 +1539,10 @@ def screen_4_fpa_workbench(result):
             go.Scatter(
                 x=stress_df['scenario'],
                 y=stress_df['shortfall_probability'],
-                mode='lines+markers+text',
+                mode='lines+text',
                 text=[f"{value:.0%}" for value in stress_df['shortfall_probability']],
                 textposition='top center',
-                line=dict(color='#1d4ed8', width=3),
-                marker=dict(size=9),
+                line=dict(color='#38bdf8', width=3, shape='spline'),
                 name='Shortfall Probability'
             ),
             secondary_y=True,
@@ -1547,14 +1554,14 @@ def screen_4_fpa_workbench(result):
                 mode='markers+text',
                 text=[f"{int(value)}d" for value in stress_df['days_to_risk']],
                 textposition='bottom center',
-                marker=dict(color='#7c3aed', size=12, symbol='diamond'),
+                marker=dict(color='#f59e0b', size=10, symbol='diamond'),
                 name='Days to Risk'
             ),
             secondary_y=False,
         )
         stress_chart.update_layout(
             title='ARIMA-Based Treasury Stress Test',
-            height=360,
+            height=320,
             hovermode='x unified'
         )
         stress_chart.update_yaxes(title_text='Ending Cash ($)', secondary_y=False)
@@ -1778,13 +1785,13 @@ def screen_6_compliance_close(result):
                 values='Count',
                 color='Status',
                 color_discrete_map={
-                    'Matched': '#16a34a',
+                    'Matched': '#22c55e',
                     'Review': '#f59e0b',
-                    'Escalate': '#dc2626',
+                    'Escalate': '#f87171',
                 },
                 title='Reconciliation Status Mix'
             )
-            fig.update_layout(height=320)
+            fig.update_layout(height=300)
             st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
         else:
             st.info("No reconciliation items available.")
@@ -1884,11 +1891,11 @@ def screen_7_strategic_planning(result):
             compliance.get('kpis', {}).get('review_queue', 0),
             compliance.get('kpis', {}).get('escalations', 0),
         ],
-        marker_color=['#0f766e', '#0369a1', '#f59e0b', '#dc2626']
+        marker_color=['#64748b', '#38bdf8', '#f59e0b', '#7dd3fc']
     ))
     outcome_chart.update_layout(
         title='Strategic Planning Outcomes',
-        height=340,
+        height=300,
         yaxis_title='Value'
     )
     st.plotly_chart(style_plotly_figure(outcome_chart), use_container_width=True, theme=None)
@@ -1907,7 +1914,7 @@ def main():
     <section class="sidebar-brand">
         <p class="kicker">Scenario Controls</p>
         <p class="title">Finance Input Deck</p>
-        <p class="copy">Same workflow, new glassmorphism shell. Tune the business context and rerun the analysis pipeline.</p>
+        <p class="copy">Tune the business context and rerun the analysis pipeline.</p>
     </section>
     """, unsafe_allow_html=True)
     data_source = st.sidebar.selectbox(
@@ -1988,7 +1995,7 @@ def main():
         working_capital_efficiency = st.slider("Working Capital Efficiency (%)", 0, 20, 0, step=5) / 100
         capital_efficiency_score = st.slider("Capital Efficiency Score", 0, 100, 50, step=5)
         company_age_years = st.slider("Company Age (years)", 1, 30, 5, step=1)
-    current_cash = st.sidebar.slider("Current Cash Balance", 50000, 1000000, 700000, step=10000)
+    current_cash = st.sidebar.slider("Current Cash Balance ($)", 50000, 1000000, 700000, step=10000)
     planning_assumptions = {
         "forecast_horizon_days": forecast_horizon_days,
         "burn_shock_pct": burn_shock_pct,
