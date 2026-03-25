@@ -800,7 +800,9 @@ def get_severity_color(severity):
                 plot_bgcolor='rgba(0,0,0,0)',
                 paper_bgcolor='rgba(0,0,0,0)',
             )
-            st.plotly_chart(fig, use_container_width=True)
+            # ✅ Simple fix
+st.plotly_chart(fig, use_container_width=True)
+
 
 
 
