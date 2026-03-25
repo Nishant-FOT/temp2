@@ -924,26 +924,42 @@ def screen_1_alert_dashboard(result):
                 'Day': range(1, len(forecast_values) + 1),
                 'Daily Burn': forecast_values
             })
-            
-            fig = go.Figure()
-            fig.add_trace(go.Scatter(
-                x=df_forecast['Day'],
-                y=df_forecast['Daily Burn'],
-                mode='lines',
-                name='Projected Daily Burn',
-                line=dict(color='#38bdf8', width=3, shape='spline'),
-                fill='tozeroy',
-                fillcolor='rgba(56, 189, 248, 0.16)',
-                hovertemplate='<b>Day %{x}</b><br>Daily Burn: $%{y:,.0f}<extra></extra>'
-            ))
-            fig.update_layout(
-                title='30-Day Cashflow Forecast',
-                xaxis_title='Day',
-                yaxis_title='Daily Burn ($)',
-                height=300,
-                hovermode='x unified'
-            )
-            st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
+            forecast_values = result['cashflowforecast']['forecastvalues']
+if forecast_values:
+    df_forecast = pd.DataFrame({
+        'Day': range(1, len(forecast_values) + 1),
+        'Daily Burn': forecast_values
+    })
+    max_burn = max(forecast_values) if forecast_values else 10000
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(
+        x=df_forecast['Day'],
+        y=df_forecast['Daily Burn'],
+        mode='lines',
+        name='Projected Daily Burn',
+        line=dict(color='#ff6600', width=2),
+        fill='tozeroy',
+        fillcolor='rgba(255, 102, 0, 0.15)'  # subtle orange fill
+    ))
+    fig.update_layout(
+        title='30-Day Cashflow Forecast',
+        xaxis_title='Day',
+        yaxis_title='Daily Burn ($)',
+        height=350,
+        hovermode='x unified',
+        yaxis=dict(
+            range=[0, max_burn * 1.15],   # ← locks axis from 0 upward
+            rangemode='nonnegative',       # ← prevents any negative display
+            tickprefix='$',
+            tickformat=',.0f',
+        ),
+        margin=dict(l=80, r=20, t=50, b=50),  # ← fixes label clipping
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
 
 
 def screen_2_agent_reasoning(result):
