@@ -19,240 +19,713 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better styling
-# Custom CSS for glassmorphism styling
-st.markdown("""
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+def inject_glass_theme():
+    """Apply a glassmorphism visual system while preserving the existing layout."""
+    st.markdown("""
+        <style>
+        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&display=swap');
 
-:root {
-    --bg-main: #07111f;
-    --bg-secondary: #0f172a;
-    --bg-panel: rgba(15, 23, 42, 0.60);
-    --bg-panel-strong: rgba(15, 23, 42, 0.78);
-    --border-soft: rgba(148, 163, 184, 0.18);
-    --border-accent: rgba(103, 232, 249, 0.25);
-    --text-main: #e2e8f0;
-    --text-soft: #94a3b8;
-    --accent-cyan: #22d3ee;
-    --accent-blue: #60a5fa;
-    --accent-violet: #8b5cf6;
-    --success: #22c55e;
-    --warning: #f59e0b;
-    --danger: #ef4444;
-}
+        :root {
+            --bg-ink: #04101d;
+            --bg-deep: #091a2c;
+            --bg-mid: #0f2741;
+            --bg-soft: #163555;
+            --text-strong: #f7fbff;
+            --text-base: #dbe7f5;
+            --text-muted: #95a8c4;
+            --glass-bg: rgba(8, 20, 36, 0.54);
+            --glass-strong: rgba(10, 25, 44, 0.72);
+            --glass-border: rgba(255, 255, 255, 0.14);
+            --glass-border-strong: rgba(255, 255, 255, 0.22);
+            --glass-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
+            --accent-cool: #7dd3fc;
+            --accent-cool-strong: #38bdf8;
+            --accent-warm: #f59e0b;
+            --accent-teal: #2dd4bf;
+            --accent-success: #22c55e;
+            --accent-danger: #f87171;
+        }
 
-html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
-}
+        html, body, [class*="css"] {
+            font-family: "Manrope", "Segoe UI", sans-serif;
+        }
 
-.stApp {
-    background:
-        radial-gradient(circle at 15% 20%, rgba(34, 211, 238, 0.16), transparent 26%),
-        radial-gradient(circle at 85% 15%, rgba(139, 92, 246, 0.14), transparent 28%),
-        radial-gradient(circle at 60% 80%, rgba(59, 130, 246, 0.10), transparent 30%),
-        linear-gradient(135deg, #040812 0%, #0b1220 45%, #111827 100%);
-    color: var(--text-main);
-}
+        [data-testid="stAppViewContainer"] {
+            background:
+                radial-gradient(circle at 8% 10%, rgba(125, 211, 252, 0.24), transparent 26%),
+                radial-gradient(circle at 88% 12%, rgba(245, 158, 11, 0.16), transparent 24%),
+                radial-gradient(circle at 15% 88%, rgba(45, 212, 191, 0.16), transparent 22%),
+                linear-gradient(135deg, #030915 0%, #071321 28%, #0b1e31 62%, #10263d 100%);
+            color: var(--text-strong);
+        }
 
-.block-container {
-    padding-top: 1.1rem;
-    padding-bottom: 2rem;
-    max-width: 1450px;
-}
+        [data-testid="stAppViewContainer"]::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background:
+                linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 32px 32px;
+            mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.6), transparent 92%);
+        }
 
-h1, h2, h3, h4 {
-    color: #f8fafc !important;
-    letter-spacing: -0.02em;
-}
+        [data-testid="stHeader"] {
+            background: transparent;
+        }
 
-p, label, li, span {
-    color: var(--text-main);
-}
+        [data-testid="stToolbar"] {
+            right: 1rem;
+            top: 0.75rem;
+        }
 
-section[data-testid="stSidebar"] {
-    background:
-        linear-gradient(180deg, rgba(7, 17, 31, 0.96) 0%, rgba(15, 23, 42, 0.92) 100%);
-    border-right: 1px solid var(--border-soft);
-    backdrop-filter: blur(14px);
-}
+        .block-container {
+            max-width: 1440px;
+            padding-top: 1.6rem;
+            padding-bottom: 3rem;
+        }
 
-section[data-testid="stSidebar"] * {
-    color: #dbeafe !important;
-}
+        [data-testid="stSidebar"] {
+            background:
+                linear-gradient(180deg, rgba(6, 16, 30, 0.92), rgba(8, 20, 36, 0.84)),
+                radial-gradient(circle at top left, rgba(125, 211, 252, 0.12), transparent 36%);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 18px 0 48px rgba(0, 0, 0, 0.22);
+            backdrop-filter: blur(24px);
+        }
 
-section[data-testid="stSidebar"] .stButton > button {
-    background: linear-gradient(90deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
-    color: white !important;
-    border: none;
-    border-radius: 14px;
-    font-weight: 700;
-    box-shadow: 0 12px 30px rgba(59, 130, 246, 0.30);
-    transition: all 0.25s ease;
-}
+        [data-testid="stSidebar"] > div:first-child {
+            background: transparent;
+        }
 
-section[data-testid="stSidebar"] .stButton > button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 16px 38px rgba(59, 130, 246, 0.40);
-}
+        [data-testid="stSidebar"] h1,
+        [data-testid="stSidebar"] h2,
+        [data-testid="stSidebar"] h3,
+        [data-testid="stSidebar"] label,
+        [data-testid="stSidebar"] p,
+        [data-testid="stSidebar"] span,
+        [data-testid="stSidebar"] div {
+            color: var(--text-base);
+        }
 
-div[data-baseweb="select"] > div,
-div[data-baseweb="input"] > div,
-div[data-testid="stTextInput"] input,
-div[data-testid="stNumberInput"] input,
-div[data-testid="stTextArea"] textarea {
-    background: rgba(15, 23, 42, 0.72) !important;
-    border: 1px solid var(--border-soft) !important;
-    border-radius: 14px !important;
-    color: var(--text-main) !important;
-    backdrop-filter: blur(10px);
-}
+        h1, h2, h3, h4, h5, h6 {
+            font-family: "Space Grotesk", "Manrope", sans-serif;
+            letter-spacing: -0.03em;
+            color: var(--text-strong);
+        }
 
-.stTabs [data-baseweb="tab-list"] {
-    gap: 10px;
-    background: rgba(15, 23, 42, 0.50);
-    border: 1px solid var(--border-soft);
-    border-radius: 18px;
-    padding: 8px;
-    backdrop-filter: blur(12px);
-}
+        [data-testid="stMarkdownContainer"] p,
+        [data-testid="stMarkdownContainer"] li,
+        [data-testid="stCaptionContainer"] {
+            color: var(--text-base);
+        }
 
-.stTabs [data-baseweb="tab"] {
-    height: 46px;
-    border-radius: 12px;
-    color: #cbd5e1;
-    font-weight: 600;
-    background: transparent;
-    transition: all 0.25s ease;
-}
+        .sidebar-brand,
+        .hero-panel,
+        .glass-panel,
+        .landing-card,
+        .briefing-card,
+        .action-card,
+        .alert-critical,
+        .alert-high,
+        .alert-medium,
+        .alert-safe {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(145deg, rgba(16, 37, 61, 0.72), rgba(7, 17, 31, 0.52));
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(22px);
+        }
 
-.stTabs [aria-selected="true"] {
-    background: linear-gradient(90deg, rgba(34, 211, 238, 0.18), rgba(139, 92, 246, 0.18));
-    color: white !important;
-    border: 1px solid var(--border-accent);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
-}
+        .sidebar-brand::before,
+        .hero-panel::before,
+        .glass-panel::before,
+        .landing-card::before,
+        .briefing-card::before,
+        .action-card::before,
+        .alert-critical::before,
+        .alert-high::before,
+        .alert-medium::before,
+        .alert-safe::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), transparent 42%);
+            pointer-events: none;
+        }
 
-div[data-testid="stMetric"] {
-    background: linear-gradient(180deg, rgba(15, 23, 42, 0.64), rgba(15, 23, 42, 0.82));
-    border: 1px solid var(--border-soft);
-    border-radius: 18px;
-    padding: 14px 16px;
-    box-shadow: 0 12px 28px rgba(2, 6, 23, 0.26);
-    backdrop-filter: blur(14px);
-    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
-}
+        .sidebar-brand {
+            padding: 1.15rem 1.1rem;
+            margin-bottom: 1rem;
+            border-radius: 24px;
+        }
 
-div[data-testid="stMetric"]:hover {
-    transform: translateY(-4px);
-    border-color: rgba(96, 165, 250, 0.35);
-    box-shadow: 0 18px 36px rgba(14, 165, 233, 0.18);
-}
+        .sidebar-brand p {
+            margin: 0;
+        }
 
-div[data-testid="stMetricLabel"] {
-    color: var(--text-soft) !important;
-    font-weight: 600;
-}
+        .sidebar-brand .kicker {
+            text-transform: uppercase;
+            letter-spacing: 0.16em;
+            font-size: 0.72rem;
+            color: var(--accent-cool);
+            font-weight: 700;
+        }
 
-div[data-testid="stMetricValue"] {
-    color: #f8fafc !important;
-    font-weight: 800;
-}
+        .sidebar-brand .title {
+            margin-top: 0.4rem;
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--text-strong);
+        }
 
-div[data-testid="stMetricDelta"] {
-    color: #bfdbfe !important;
-}
+        .sidebar-brand .copy {
+            margin-top: 0.35rem;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            line-height: 1.5;
+        }
 
-.alert-critical, .alert-high, .alert-medium, .alert-safe {
-    padding: 20px;
-    border-radius: 20px;
-    border-left: 4px solid;
-    backdrop-filter: blur(14px);
-    box-shadow: 0 14px 32px rgba(2, 6, 23, 0.28);
-    transition: transform 0.22s ease, box-shadow 0.22s ease;
-}
+        .hero-panel {
+            display: flex;
+            justify-content: space-between;
+            gap: 1.25rem;
+            padding: 1.6rem 1.7rem;
+            margin-bottom: 1.4rem;
+            border: 1px solid var(--glass-border-strong);
+            background:
+                radial-gradient(circle at top right, rgba(125, 211, 252, 0.16), transparent 34%),
+                linear-gradient(145deg, rgba(18, 44, 71, 0.82), rgba(7, 17, 31, 0.6));
+        }
 
-.alert-critical:hover, .alert-high:hover, .alert-medium:hover, .alert-safe:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 18px 40px rgba(2, 6, 23, 0.34);
-}
+        .hero-copy-block {
+            max-width: 760px;
+            z-index: 1;
+        }
 
-.alert-critical {
-    background: linear-gradient(135deg, rgba(127, 29, 29, 0.76), rgba(31, 41, 55, 0.88));
-    color: #fee2e2;
-    border-left-color: #ef4444;
-}
+        .hero-eyebrow {
+            margin: 0;
+            color: var(--accent-cool);
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            font-size: 0.72rem;
+            font-weight: 800;
+        }
 
-.alert-high {
-    background: linear-gradient(135deg, rgba(124, 45, 18, 0.76), rgba(31, 41, 55, 0.88));
-    color: #ffedd5;
-    border-left-color: #f97316;
-}
+        .hero-title {
+            margin: 0.45rem 0 0;
+            font-size: clamp(2rem, 4vw, 3.35rem);
+            line-height: 0.98;
+        }
 
-.alert-medium {
-    background: linear-gradient(135deg, rgba(113, 63, 18, 0.76), rgba(31, 41, 55, 0.88));
-    color: #fef3c7;
-    border-left-color: #f59e0b;
-}
+        .hero-copy {
+            margin: 0.9rem 0 0;
+            max-width: 680px;
+            color: var(--text-base);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
 
-.alert-safe {
-    background: linear-gradient(135deg, rgba(20, 83, 45, 0.76), rgba(31, 41, 55, 0.88));
-    color: #dcfce7;
-    border-left-color: #22c55e;
-}
+        .hero-chip-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin-top: 1rem;
+        }
 
-.alert-critical h3, .alert-critical p, .alert-critical strong,
-.alert-high h3, .alert-high p, .alert-high strong,
-.alert-medium h3, .alert-medium p, .alert-medium strong,
-.alert-safe h3, .alert-safe p, .alert-safe strong {
-    color: inherit !important;
-}
+        .glass-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.55rem 0.9rem;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: var(--text-base);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
 
-.briefing-card {
-    background: linear-gradient(180deg, rgba(15, 23, 42, 0.68), rgba(17, 24, 39, 0.84));
-    color: #e5eefc;
-    padding: 24px;
-    border-radius: 20px;
-    line-height: 1.9;
-    font-size: 16px;
-    border: 1px solid var(--border-soft);
-    backdrop-filter: blur(14px);
-    box-shadow: 0 14px 36px rgba(2, 6, 23, 0.30);
-    transition: transform 0.22s ease, box-shadow 0.22s ease;
-}
+        .hero-stats {
+            min-width: 290px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(132px, 1fr));
+            gap: 0.8rem;
+            align-self: stretch;
+            z-index: 1;
+        }
 
-.briefing-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 18px 40px rgba(2, 6, 23, 0.36);
-}
+        .hero-stat {
+            padding: 1rem;
+            border-radius: 20px;
+            background: rgba(7, 17, 31, 0.36);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
 
-div[data-testid="stDataFrame"] {
-    background: rgba(15, 23, 42, 0.52);
-    border: 1px solid var(--border-soft);
-    border-radius: 18px;
-    padding: 8px;
-    backdrop-filter: blur(12px);
-}
+        .hero-stat-label {
+            margin: 0;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.14em;
+            font-size: 0.7rem;
+            font-weight: 700;
+        }
 
-.js-plotly-plot {
-    background: rgba(15, 23, 42, 0.42);
-    border: 1px solid rgba(148, 163, 184, 0.10);
-    border-radius: 18px;
-    padding: 8px;
-    backdrop-filter: blur(10px);
-}
+        .hero-stat-value {
+            margin: 0.5rem 0 0;
+            color: var(--text-strong);
+            font-family: "Space Grotesk", sans-serif;
+            font-size: 1.35rem;
+            font-weight: 700;
+        }
 
-[data-testid="stInfo"], [data-testid="stWarning"], [data-testid="stSuccess"], [data-testid="stError"] {
-    border-radius: 16px;
-    border: 1px solid var(--border-soft);
-    backdrop-filter: blur(12px);
-}
+        .glass-panel {
+            padding: 1.15rem 1.2rem;
+            margin-bottom: 1rem;
+        }
 
-hr {
-    border-color: rgba(148, 163, 184, 0.10);
-}
-</style>
-""", unsafe_allow_html=True)
+        .section-caption {
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent-cool);
+            font-size: 0.7rem;
+            font-weight: 800;
+        }
+
+        .panel-title {
+            margin: 0.5rem 0 0;
+            font-size: 1.35rem;
+        }
+
+        .panel-copy {
+            margin: 0.55rem 0 0;
+            color: var(--text-base);
+            line-height: 1.65;
+        }
+
+        .landing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .landing-card {
+            padding: 1.1rem 1.1rem 1rem;
+        }
+
+        .landing-card .card-kicker {
+            margin: 0;
+            color: var(--accent-warm);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 0.7rem;
+            font-weight: 800;
+        }
+
+        .landing-card h4 {
+            margin: 0.55rem 0 0;
+            font-size: 1.1rem;
+        }
+
+        .landing-card p {
+            margin: 0.55rem 0 0;
+            color: var(--text-base);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .alert-critical,
+        .alert-high,
+        .alert-medium,
+        .alert-safe {
+            padding: 1.15rem 1.2rem;
+            border-left: 0;
+        }
+
+        .alert-critical {
+            border-color: rgba(248, 113, 113, 0.36);
+            background: linear-gradient(145deg, rgba(127, 29, 29, 0.76), rgba(10, 25, 44, 0.52));
+        }
+
+        .alert-high {
+            border-color: rgba(251, 191, 36, 0.34);
+            background: linear-gradient(145deg, rgba(133, 77, 14, 0.74), rgba(10, 25, 44, 0.52));
+        }
+
+        .alert-medium {
+            border-color: rgba(253, 224, 71, 0.28);
+            background: linear-gradient(145deg, rgba(120, 87, 14, 0.7), rgba(10, 25, 44, 0.52));
+        }
+
+        .alert-safe {
+            border-color: rgba(74, 222, 128, 0.3);
+            background: linear-gradient(145deg, rgba(21, 128, 61, 0.68), rgba(10, 25, 44, 0.52));
+        }
+
+        .alert-critical h3,
+        .alert-critical p,
+        .alert-critical strong,
+        .alert-high h3,
+        .alert-high p,
+        .alert-high strong,
+        .alert-medium h3,
+        .alert-medium p,
+        .alert-medium strong,
+        .alert-safe h3,
+        .alert-safe p,
+        .alert-safe strong,
+        .briefing-card p,
+        .briefing-card strong,
+        .action-card h2,
+        .action-card h3,
+        .action-card p,
+        .action-card strong {
+            color: var(--text-strong);
+        }
+
+        .briefing-card {
+            padding: 1.4rem 1.45rem;
+            line-height: 1.9;
+            font-size: 1rem;
+        }
+
+        .action-card {
+            padding: 1.2rem 1.25rem;
+            margin-top: 1.2rem;
+            border-color: var(--action-accent, rgba(125, 211, 252, 0.24));
+            background:
+                radial-gradient(circle at top right, rgba(255, 255, 255, 0.1), transparent 28%),
+                linear-gradient(145deg, rgba(8, 20, 36, 0.76), rgba(15, 37, 61, 0.64));
+        }
+
+        [data-testid="stMetric"] {
+            min-height: 100%;
+            padding: 1rem 1rem 0.95rem;
+            background: linear-gradient(145deg, rgba(16, 37, 61, 0.6), rgba(7, 17, 31, 0.5));
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(18px);
+        }
+
+        [data-testid="stMetricLabel"] {
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            font-size: 0.72rem;
+            font-weight: 700;
+        }
+
+        [data-testid="stMetricValue"] {
+            color: var(--text-strong);
+            font-family: "Space Grotesk", sans-serif;
+            letter-spacing: -0.03em;
+        }
+
+        [data-testid="stMetricDelta"] {
+            color: var(--accent-cool);
+        }
+
+        [data-testid="stMetricDelta"] svg {
+            fill: currentColor;
+        }
+
+        [data-baseweb="tab-list"] {
+            gap: 0.55rem;
+            margin-bottom: 1rem;
+        }
+
+        button[role="tab"] {
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-base);
+            padding: 0.68rem 1rem;
+            backdrop-filter: blur(14px);
+            transition: all 0.2s ease;
+        }
+
+        button[role="tab"]:hover {
+            border-color: rgba(255, 255, 255, 0.14);
+            color: var(--text-strong);
+        }
+
+        button[role="tab"][aria-selected="true"] {
+            color: var(--text-strong);
+            border-color: rgba(125, 211, 252, 0.28);
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(14, 165, 233, 0.08));
+            box-shadow: 0 12px 30px rgba(3, 105, 161, 0.22);
+        }
+
+        div[data-baseweb="tab-border"] {
+            display: none;
+        }
+
+        [data-baseweb="select"] > div,
+        [data-baseweb="input"] > div,
+        .stTextInput input,
+        .stTextArea textarea,
+        .stNumberInput input {
+            background: rgba(10, 25, 44, 0.62) !important;
+            border: 1px solid rgba(255, 255, 255, 0.12) !important;
+            border-radius: 16px !important;
+            color: var(--text-strong) !important;
+            box-shadow: none !important;
+        }
+
+        .stSlider [data-baseweb="slider"] {
+            padding-top: 0.35rem;
+        }
+
+        .stSlider [data-baseweb="slider"] > div > div {
+            background: linear-gradient(90deg, rgba(56, 189, 248, 0.92), rgba(245, 158, 11, 0.92)) !important;
+        }
+
+        .stSlider [role="slider"] {
+            background: linear-gradient(180deg, #dff7ff, #7dd3fc) !important;
+            border: 2px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 0 0 6px rgba(125, 211, 252, 0.14) !important;
+        }
+
+        details[data-testid="stExpander"] {
+            background: rgba(10, 25, 44, 0.52);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        details[data-testid="stExpander"] summary {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .stButton > button,
+        .stDownloadButton > button {
+            width: 100%;
+            border: 0;
+            border-radius: 18px;
+            padding: 0.72rem 1rem;
+            font-weight: 800;
+            color: #04101d;
+            background: linear-gradient(135deg, #8be0ff, #38bdf8 55%, #0ea5e9);
+            box-shadow: 0 18px 38px rgba(14, 165, 233, 0.28);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stButton > button:hover,
+        .stDownloadButton > button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 22px 44px rgba(14, 165, 233, 0.34);
+        }
+
+        .stButton > button:focus,
+        .stDownloadButton > button:focus {
+            border: 0;
+            box-shadow: 0 0 0 0.24rem rgba(125, 211, 252, 0.24);
+        }
+
+        div[data-testid="stAlert"] {
+            background: rgba(8, 20, 36, 0.72);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 20px;
+            color: var(--text-strong);
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(18px);
+        }
+
+        [data-testid="stDataFrame"],
+        div[data-testid="stTable"] {
+            background: rgba(8, 20, 36, 0.56);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 0.35rem;
+            box-shadow: var(--glass-shadow);
+            backdrop-filter: blur(18px);
+            overflow: hidden;
+        }
+
+        [data-testid="stDataFrame"] [role="grid"],
+        [data-testid="stDataFrameResizable"] {
+            background: transparent !important;
+        }
+
+        .element-container iframe {
+            border-radius: 24px;
+        }
+
+        hr {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-note {
+            margin-top: 0.6rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+        }
+
+        @media (max-width: 980px) {
+            .hero-panel {
+                flex-direction: column;
+            }
+
+            .hero-stats {
+                min-width: 0;
+            }
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+
+inject_glass_theme()
+
+
+def style_plotly_figure(fig):
+    """Apply a shared glassmorphism theme to Plotly figures."""
+    fig.update_layout(
+        paper_bgcolor="rgba(0, 0, 0, 0)",
+        plot_bgcolor="rgba(8, 20, 36, 0.36)",
+        font=dict(color="#dbe7f5", family="Manrope, sans-serif"),
+        title=dict(font=dict(color="#f7fbff", family="Space Grotesk, sans-serif", size=20)),
+        legend=dict(
+            bgcolor="rgba(8, 20, 36, 0.28)",
+            bordercolor="rgba(255, 255, 255, 0.12)",
+            borderwidth=1,
+            font=dict(color="#dbe7f5")
+        ),
+        hoverlabel=dict(
+            bgcolor="rgba(3, 9, 21, 0.95)",
+            bordercolor="rgba(255, 255, 255, 0.14)",
+            font=dict(color="#f7fbff")
+        ),
+        margin=dict(l=16, r=16, t=64, b=16),
+    )
+    fig.update_annotations(font=dict(color="#f7fbff"))
+    fig.update_xaxes(
+        showgrid=True,
+        gridcolor="rgba(148, 163, 184, 0.14)",
+        linecolor="rgba(148, 163, 184, 0.16)",
+        zeroline=False,
+        title_font=dict(color="#dbe7f5"),
+        tickfont=dict(color="#dbe7f5"),
+    )
+    fig.update_yaxes(
+        showgrid=True,
+        gridcolor="rgba(148, 163, 184, 0.14)",
+        linecolor="rgba(148, 163, 184, 0.16)",
+        zeroline=False,
+        title_font=dict(color="#dbe7f5"),
+        tickfont=dict(color="#dbe7f5"),
+    )
+    return fig
+
+
+def render_app_hero(result=None):
+    """Render the top-level app hero without changing the screen layout."""
+    if result:
+        decision = result.get('decision_analysis', {})
+        compliance = result.get('compliance_analysis', {}).get('kpis', {})
+        hero_copy = (
+            "Scenario-aware spend, liquidity, planning, and close operations are running in the same "
+            "control surface. Inputs stay in the sidebar and all workspaces remain unchanged."
+        )
+        chips = [
+            str(result.get('sector', 'n/a')).replace('_', ' ').title(),
+            str(result.get('business_scale', 'n/a')).replace('_', ' ').title(),
+            str(result.get('state_of_business', 'n/a')).replace('_', ' ').title(),
+            str(result.get('data_source', 'synthetic')).replace('_', ' ').title(),
+        ]
+        stats = [
+            ("Current Cash", f"${result.get('current_cash', 0):,.0f}"),
+            ("Runway", f"{result.get('cashflow_forecast', {}).get('days_to_risk', 0)} days"),
+            ("Best Action", decision.get('best_action', 'n/a').replace('_', ' ').title()),
+            ("Close Risk", str(compliance.get('close_risk', 'low')).title()),
+        ]
+        eyebrow = "Live Finance Scenario"
+    else:
+        hero_copy = (
+            "Glassmorphism restyle applied to the existing CFO workflow. Configure a scenario in the "
+            "sidebar, run the pipeline, and use the same seven workspaces with a new visual system."
+        )
+        chips = [
+            "Spend Intelligence",
+            "Cash Forecasting",
+            "FP&A",
+            "Compliance",
+        ]
+        stats = [
+            ("Workspaces", "7"),
+            ("Flow", "Same"),
+            ("Decisioning", "Agentic"),
+            ("Design", "Glass"),
+        ]
+        eyebrow = "AI-Native Finance Command Center"
+
+    chip_markup = "".join(f'<span class="glass-chip">{chip}</span>' for chip in chips)
+    stat_markup = "".join(
+        f"""
+        <div class="hero-stat">
+            <p class="hero-stat-label">{label}</p>
+            <p class="hero-stat-value">{value}</p>
+        </div>
+        """
+        for label, value in stats
+    )
+
+    st.markdown(f"""
+        <section class="hero-panel">
+            <div class="hero-copy-block">
+                <p class="hero-eyebrow">{eyebrow}</p>
+                <h1 class="hero-title">AI CFO Control Panel</h1>
+                <p class="hero-copy">{hero_copy}</p>
+                <div class="hero-chip-row">{chip_markup}</div>
+            </div>
+            <div class="hero-stats">{stat_markup}</div>
+        </section>
+    """, unsafe_allow_html=True)
+
+
+def render_empty_state():
+    """Render the pre-analysis landing content."""
+    st.markdown("""
+        <section class="glass-panel">
+            <p class="section-caption">Analysis Flow</p>
+            <h3 class="panel-title">Configure the scenario, then run the finance stack.</h3>
+            <p class="panel-copy">
+                The app structure stays intact: Alert Dashboard, Agent Reasoning, CFO Briefing, FP&A,
+                Overview, Compliance, and Strategic Planning. This refresh changes presentation only.
+            </p>
+        </section>
+        <section class="landing-grid">
+            <article class="landing-card">
+                <p class="card-kicker">Alert Dashboard</p>
+                <h4>Spend + liquidity signal</h4>
+                <p>Detect anomaly pressure, runway risk, vendor concentration, and forecast posture.</p>
+            </article>
+            <article class="landing-card">
+                <p class="card-kicker">Agent Reasoning</p>
+                <h4>Decision comparison matrix</h4>
+                <p>Review action-level tradeoffs, recommendation margins, and supporting agent outputs.</p>
+            </article>
+            <article class="landing-card">
+                <p class="card-kicker">CFO Briefing</p>
+                <h4>Executive narrative layer</h4>
+                <p>Translate the operating state into a concise briefing with action items and risk framing.</p>
+            </article>
+            <article class="landing-card">
+                <p class="card-kicker">FP&A + Controls</p>
+                <h4>Planning and close views</h4>
+                <p>Track variance, scenario sensitivity, close readiness, and strategic driver outcomes.</p>
+            </article>
+        </section>
+    """, unsafe_allow_html=True)
+
+
 @st.cache_resource
 def get_orchestrator():
     """Initialize orchestrator (cached)."""
@@ -273,12 +746,12 @@ def build_orchestrator(**kwargs):
 def get_risk_color(risk_level):
     """Get color for risk level."""
     colors = {
-        'critical': '#cc0000',
-        'high': '#ff6600',
-        'medium': '#ffcc00',
-        'low': '#00cc00',
+        'critical': '#f87171',
+        'high': '#fb923c',
+        'medium': '#facc15',
+        'low': '#34d399',
     }
-    return colors.get(risk_level, '#999999')
+    return colors.get(risk_level, '#94a3b8')
 
 
 def get_severity_color(severity):
@@ -436,7 +909,7 @@ def screen_1_alert_dashboard(result):
                 title='Spending Anomaly Scores by Category'
             )
             fig.update_xaxes(tickangle=45)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
     
     with chart_cols[1]:
         # Cashflow forecast
@@ -463,7 +936,7 @@ def screen_1_alert_dashboard(result):
                 height=350,
                 hovermode='x unified'
             )
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
 
 
 def screen_2_agent_reasoning(result):
@@ -507,9 +980,9 @@ def screen_2_agent_reasoning(result):
         level_display = level_value if level_value is not None else 'N/A'
     
     st.markdown(f"""
-    <div style="background-color: {color}20; border-left: 4px solid {color}; padding: 15px; border-radius: 8px; margin-top: 20px;">
+    <div class="action-card" style="--action-accent: {color};">
     <h3>✅ Recommended Action</h3>
-    <h2 style="color: {color};">{best_action}</h2>
+    <h2 style="color: {color}; margin: 0.35rem 0 0.45rem;">{best_action}</h2>
     <p><strong>Level:</strong> {level_display}</p>
     <p><strong>Decision Margin:</strong> {decision['confidence']:.0%}</p>
     <p><strong>Reasoning:</strong> {decision['reasoning']}</p>
@@ -734,7 +1207,7 @@ def screen_3_cfo_briefing(result):
             hovermode='x unified',
             yaxis=dict(range=[-y_axis_limit, y_axis_limit], zeroline=False)
         )
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
 
         sim_cols = st.columns(3)
         warning_horizon_days = monte_carlo.get('warning_horizon_days', 14)
@@ -826,7 +1299,7 @@ def screen_3_cfo_briefing(result):
                 height=320,
                 hovermode='x unified'
             )
-            st.plotly_chart(breach_chart, use_container_width=True)
+            st.plotly_chart(style_plotly_figure(breach_chart), use_container_width=True, theme=None)
     
     # Session metadata
     st.divider()
@@ -926,7 +1399,7 @@ def screen_4_fpa_workbench(result):
             title='Month-to-Date Budget Variance by Category'
         )
         chart.update_layout(height=360)
-        st.plotly_chart(chart, use_container_width=True)
+        st.plotly_chart(style_plotly_figure(chart), use_container_width=True, theme=None)
         st.dataframe(
             variance_df.style.format({
                 'Budget': '${:,.0f}',
@@ -973,7 +1446,7 @@ def screen_4_fpa_workbench(result):
             yaxis_title='Cash ($)',
             height=350
         )
-        st.plotly_chart(scenario_chart, use_container_width=True)
+        st.plotly_chart(style_plotly_figure(scenario_chart), use_container_width=True, theme=None)
 
     sensitivity_analysis = fpa.get('sensitivity_analysis', [])
     if sensitivity_analysis:
@@ -994,7 +1467,7 @@ def screen_4_fpa_workbench(result):
             yaxis_title='30d End Cash ($)',
             height=320
         )
-        st.plotly_chart(sensitivity_chart, use_container_width=True)
+        st.plotly_chart(style_plotly_figure(sensitivity_chart), use_container_width=True, theme=None)
         st.dataframe(
             sensitivity_df.style.format({
                 'burn_multiplier': '{:.0%}',
@@ -1028,7 +1501,7 @@ def screen_4_fpa_workbench(result):
             height=340,
             showlegend=False
         )
-        st.plotly_chart(tornado_chart, use_container_width=True)
+        st.plotly_chart(style_plotly_figure(tornado_chart), use_container_width=True, theme=None)
         st.dataframe(
             driver_df.style.format({
                 'baseline_end_cash': '${:,.0f}',
@@ -1086,7 +1559,7 @@ def screen_4_fpa_workbench(result):
         )
         stress_chart.update_yaxes(title_text='Ending Cash ($)', secondary_y=False)
         stress_chart.update_yaxes(title_text='Shortfall Probability', range=[0, 1.05], secondary_y=True)
-        st.plotly_chart(stress_chart, use_container_width=True)
+        st.plotly_chart(style_plotly_figure(stress_chart), use_container_width=True, theme=None)
         st.dataframe(
             stress_df.style.format({
                 'avg_daily_burn': '${:,.0f}',
@@ -1312,7 +1785,7 @@ def screen_6_compliance_close(result):
                 title='Reconciliation Status Mix'
             )
             fig.update_layout(height=320)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
         else:
             st.info("No reconciliation items available.")
 
@@ -1418,7 +1891,7 @@ def screen_7_strategic_planning(result):
         height=340,
         yaxis_title='Value'
     )
-    st.plotly_chart(outcome_chart, use_container_width=True)
+    st.plotly_chart(style_plotly_figure(outcome_chart), use_container_width=True, theme=None)
 
     st.info(
         f"Planning narration: {fpa.get('planning_narration', 'No planning commentary available.')} "
@@ -1429,10 +1902,14 @@ def screen_7_strategic_planning(result):
 
 def main():
     """Main app structure."""
-    st.title("🏦 AI CFO Control Panel")
-    
     # Sidebar
-    st.sidebar.title("Settings")
+    st.sidebar.markdown("""
+    <section class="sidebar-brand">
+        <p class="kicker">Scenario Controls</p>
+        <p class="title">Finance Input Deck</p>
+        <p class="copy">Same workflow, new glassmorphism shell. Tune the business context and rerun the analysis pipeline.</p>
+    </section>
+    """, unsafe_allow_html=True)
     data_source = st.sidebar.selectbox(
         "Data Source",
         ["synthetic", "zaggle"],
@@ -1562,23 +2039,8 @@ def main():
     
     # Screen navigation
     if "result" not in st.session_state:
-        st.info("👈 Click **Run Analysis** to begin the AI CFO analysis pipeline.")
-        st.markdown("""
-        ### About This System
-        
-        The **AI-Native CFO Operating System** is a production-grade financial decision engine with:
-        
-        - **Spend Intelligence Agent**: Detects spending anomalies using machine learning
-        - **Cashflow Forecast Agent**: Projects liquidity risks and runway
-        - **Decision Agent**: Simulates multiple actions and recommends optimal path
-        - **Narrative Agent**: Generates executive-level briefings
-        - **FP&A Workbench**: Tracks plan variance, budget performance, and scenario outcomes
-        - **Compliance & Close**: Flags exceptions and supports close-readiness review
-        - **Strategic Planning**: Links planning assumptions to finance outcomes and recommended actions
-        - **Overview / Architecture / Impact**: Summarizes the CFO-OS concept and expected value
-        
-        Choose a sector, business scale, macro environment, and current cash balance, then click **Run Analysis** to see the system in action.
-        """)
+        render_app_hero()
+        render_empty_state()
         return
     
     previous_result = st.session_state.result
@@ -1618,6 +2080,7 @@ def main():
         st.session_state.result = orchestrator.run_analysis(days=90)
 
     result = st.session_state.result
+    render_app_hero(result)
     
     # Screen tabs
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
@@ -1653,7 +2116,10 @@ def main():
     
     # Footer
     st.divider()
-    st.markdown("*AI-Native CFO Operating System v1.0 | Production-grade financial intelligence*")
+    st.markdown(
+        '<div class="footer-note">AI-Native CFO Operating System v1.0 | Production-grade financial intelligence</div>',
+        unsafe_allow_html=True,
+    )
 
 
 if __name__ == "__main__":
