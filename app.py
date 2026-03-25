@@ -764,158 +764,6 @@ def get_severity_color(severity):
     return get_risk_color(severity)
 
 
-def screen_1_alert_dashboard(result):
-    """Screen 1: Alert Dashboard with key metrics and charts."""
-    st.header("🚨 Alert Dashboard", divider="red")
-
-    if result.get('data_source') == 'zaggle':
-        status = result.get('data_source_status', 'connected')
-        message = result.get('data_source_message', '')
-        if status == 'fallback_synthetic':
-            st.warning(f"Zaggle source fallback: {message}")
-        else:
-            st.info(f"Data source: Zaggle transaction exports. {message}")
-    
-    # Top Alert Section
-    col1, col2 = st.columns([2, 1])
-    
-    with col1:
-        spend_data = result['spend_intelligence']
-        forecast_data = result['cashflow_forecast']
-        
-        # Determine combined alert level
-        max_alert = max(
-            0 if spend_data['severity'] == 'low' else 1,
-            0 if forecast_data['risk_level'] == 'low' else 1,
-        )
-        
-        if max_alert == 1:
-            if spend_data['severity'] == 'critical' or forecast_data['risk_level'] == 'critical':
-                alert_css = "alert-critical"
-                icon = "🚨"
-                title = "CRITICAL ALERT"
-            elif spend_data['severity'] == 'high' or forecast_data['risk_level'] == 'high':
-                alert_css = "alert-high"
-                icon = "⚠️"
-                title = "HIGH ALERT"
-            else:
-                alert_css = "alert-medium"
-                icon = "📊"
-                title = "ATTENTION NEEDED"
-        else:
-            alert_css = "alert-safe"
-            icon = "✅"
-            title = "HEALTHY STATUS"
-        
-        st.markdown(f"""
-        <div class="{alert_css}">
-        <h3>{icon} {title}</h3>
-        <p><strong>Issue:</strong> {spend_data['issue']}</p>
-        <p><strong>Risk:</strong> {forecast_data['risk_level'].upper()} - {forecast_data['days_to_risk']} days to cash constraint</p>
-        </div>
-        """, unsafe_allow_html=True)
-    
-    with col2:
-        st.metric("Transactions", result['transaction_count'], border=True)
-        st.metric("Current Cash", f"${result['current_cash']:,.0f}", border=True)
-    
-    # Key Metrics Section
-    st.subheader("📈 Key Metrics")
-    metric_cols = st.columns(4)
-    
-    with metric_cols[0]:
-        st.metric(
-            "Days to Cash Out",
-            result['cashflow_forecast']['days_to_risk'],
-            delta="forecast runway",
-            delta_color="inverse"
-        )
-    
-    with metric_cols[1]:
-        st.metric(
-            "Cash Coverage",
-            f"{result['cashflow_forecast']['cash_ratio']:.1f}x",
-            delta=f"${result['current_cash']:,.0f} on hand",
-            delta_color="normal"
-        )
-    
-    with metric_cols[2]:
-        liquidity_gap = result['cashflow_forecast']['liquidity_gap']
-        st.metric(
-            "Liquidity Gap",
-            f"${abs(liquidity_gap):,.0f}",
-            delta="surplus" if liquidity_gap >= 0 else "shortfall",
-            delta_color="normal" if liquidity_gap >= 0 else "inverse"
-        )
-    
-    with metric_cols[3]:
-        projected_ending_cash = result['cashflow_forecast']['projected_ending_cash']
-        burn_adjustment = result['cashflow_forecast'].get('burn_adjustment', 0.0) * 100
-        burn_posture = result['cashflow_forecast'].get('burn_posture', 'steady state')
-        st.metric(
-            "Projected 30d End Cash",
-            f"${projected_ending_cash:,.0f}",
-            delta=f"{burn_adjustment:+.0f}% burn | {burn_posture}",
-            delta_color="normal" if projected_ending_cash >= 0 else "inverse"
-        )
-
-    st.subheader("Spend Intelligence Enhancers")
-    spend_data = result['spend_intelligence']
-    focus_category = spend_data.get('category')
-    budget_rate = spend_data.get('headline_budget_consumption', 0)
-    vendor_hhi = spend_data.get('headline_vendor_hhi', 0)
-    top_vendor = spend_data.get('headline_top_vendor', 'n/a')
-    top_vendor_share = spend_data.get('headline_top_vendor_share', 0)
-
-    enhancer_cols = st.columns(3)
-    with enhancer_cols[0]:
-        st.metric(
-            "Budget Consumption",
-            f"{budget_rate:.0%}",
-            delta=(focus_category or 'n/a').replace('_', ' ').title(),
-            border=True
-        )
-    with enhancer_cols[1]:
-        concentration_label = 'High' if vendor_hhi >= 0.25 else 'Medium' if vendor_hhi >= 0.15 else 'Low'
-        st.metric(
-            "Vendor HHI",
-            f"{vendor_hhi:.2f}",
-            delta=f"{concentration_label} concentration",
-            border=True
-        )
-    with enhancer_cols[2]:
-        st.metric(
-            "Top Vendor Share",
-            f"{top_vendor_share:.0%}",
-            delta=top_vendor,
-            border=True
-        )
-    
-    # Charts Section
-    st.subheader("📊 Spend Trend & Forecast")
-    chart_cols = st.columns(2)
-    
-    with chart_cols[0]:
-        # Anomaly scores by category
-        anomalies = result['spend_intelligence']['anomaly_scores']
-        if anomalies:
-            df_anomalies = pd.DataFrame(
-                list(anomalies.items()),
-                columns=['Category', 'Anomaly Score']
-            )
-            
-            fig = px.bar(
-                df_anomalies,
-                x='Category',
-                y='Anomaly Score',
-                color='Anomaly Score',
-                color_continuous_scale='RdYlGn_r',
-                height=300,
-                title='Spending Anomaly Scores by Category'
-            )
-            fig.update_xaxes(tickangle=45)
-            st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
-    
     with chart_cols[1]:
         # Cashflow forecast
         forecast_values = result['cashflow_forecast']['forecast_values']
@@ -924,41 +772,35 @@ def screen_1_alert_dashboard(result):
                 'Day': range(1, len(forecast_values) + 1),
                 'Daily Burn': forecast_values
             })
-            forecast_values = result['cashflowforecast']['forecastvalues']
-if forecast_values:
-    df_forecast = pd.DataFrame({
-        'Day': range(1, len(forecast_values) + 1),
-        'Daily Burn': forecast_values
-    })
-    max_burn = max(forecast_values) if forecast_values else 10000
+            max_burn = max(forecast_values) if forecast_values else 10000
 
-    fig = go.Figure()
-    fig.add_trace(go.Scatter(
-        x=df_forecast['Day'],
-        y=df_forecast['Daily Burn'],
-        mode='lines',
-        name='Projected Daily Burn',
-        line=dict(color='#ff6600', width=2),
-        fill='tozeroy',
-        fillcolor='rgba(255, 102, 0, 0.15)'  # subtle orange fill
-    ))
-    fig.update_layout(
-        title='30-Day Cashflow Forecast',
-        xaxis_title='Day',
-        yaxis_title='Daily Burn ($)',
-        height=350,
-        hovermode='x unified',
-        yaxis=dict(
-            range=[0, max_burn * 1.15],   # ← locks axis from 0 upward
-            rangemode='nonnegative',       # ← prevents any negative display
-            tickprefix='$',
-            tickformat=',.0f',
-        ),
-        margin=dict(l=80, r=20, t=50, b=50),  # ← fixes label clipping
-        plot_bgcolor='rgba(0,0,0,0)',
-        paper_bgcolor='rgba(0,0,0,0)',
-    )
-    st.plotly_chart(fig, use_container_width=True)
+            fig = go.Figure()
+            fig.add_trace(go.Scatter(
+                x=df_forecast['Day'],
+                y=df_forecast['Daily Burn'],
+                mode='lines',
+                name='Projected Daily Burn',
+                line=dict(color='#ff6600', width=2),
+                fill='tozeroy',
+                fillcolor='rgba(255, 102, 0, 0.15)'
+            ))
+            fig.update_layout(
+                title='30-Day Cashflow Forecast',
+                xaxis_title='Day',
+                yaxis_title='Daily Burn ($)',
+                height=350,
+                hovermode='x unified',
+                yaxis=dict(
+                    range=[0, max_burn * 1.15],
+                    rangemode='nonnegative',
+                    tickprefix='$',
+                    tickformat=',.0f',
+                ),
+                margin=dict(l=80, r=20, t=50, b=50),
+                plot_bgcolor='rgba(0,0,0,0)',
+                paper_bgcolor='rgba(0,0,0,0)',
+            )
+            st.plotly_chart(fig, use_container_width=True)
 
 
 
