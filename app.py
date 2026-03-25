@@ -930,7 +930,7 @@ def screen_1_alert_dashboard(result):
                 x=df_forecast['Day'],
                 y=df_forecast['Daily Burn'],
                 mode='lines',
-                name='Projected Daily Burn',
+                name='Projected Daily Burn ($)',  # Updated legend label for clarity
                 line=dict(color='#38bdf8', width=3, shape='spline'),
                 fill='tozeroy',
                 fillcolor='rgba(56, 189, 248, 0.16)',
@@ -939,7 +939,14 @@ def screen_1_alert_dashboard(result):
             fig.update_layout(
                 title='30-Day Cashflow Forecast',
                 xaxis_title='Day',
-                yaxis_title='Daily Burn ($)',
+                yaxis=dict(
+                    title='Daily Burn ($)',  # Updated y-axis label for clarity
+                    tickformat='$,',  # Ensure proper formatting of y-axis values
+                    showgrid=True,
+                    gridcolor='rgba(148, 163, 184, 0.2)',
+                    zeroline=True,
+                    zerolinecolor='rgba(148, 163, 184, 0.4)',
+                ),
                 height=300,
                 hovermode='x unified'
             )
