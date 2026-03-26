@@ -1754,14 +1754,7 @@ def screen_4_fpa_workbench(result):
             # -------------------------------
             # 🧭 AXES CONFIGURATION
             # -------------------------------
-            yaxis=dict(
-                title='Ending Cash ($)',
-                tickformat=',.0f',
-                tickprefix='$',
-                range=[min_val - padding, max_val + padding],
-                zeroline=True,
-                zerolinewidth=2
-            ),
+            
 
             yaxis2=dict(
                 title='Shortfall Probability',
