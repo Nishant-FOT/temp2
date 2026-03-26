@@ -1755,8 +1755,7 @@ def screen_4_fpa_workbench(result):
                     range=[0, 1.05],
                     secondary_y=True
                 )
-        stress_chart.update_yaxes(title_text='Ending Cash ($)', secondary_y=False)
-        stress_chart.update_yaxes(title_text='Shortfall Probability', range=[0, 1.05], secondary_y=True)
+        
         st.plotly_chart(style_plotly_figure(stress_chart), use_container_width=True, theme=None)
         st.dataframe(
             stress_df.style.format({
