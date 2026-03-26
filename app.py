@@ -1681,11 +1681,11 @@ def screen_4_fpa_workbench(result):
             ),
             secondary_y=False,
         )
-        stress_chart.add_trace(
+       stress_chart.add_trace(
             go.Scatter(
                 x=stress_df['scenario'],
                 y=stress_df['shortfall_probability'],
-                mode='lines+text',
+                mode='lines+markers',
                 text=[f"{value:.0%}" for value in stress_df['shortfall_probability']],
                 textposition='top center',
                 line=dict(color='#38bdf8', width=3, shape='spline'),
@@ -1697,7 +1697,7 @@ def screen_4_fpa_workbench(result):
             go.Scatter(
                 x=stress_df['scenario'],
                 y=stress_df['days_to_risk'],
-                mode='markers+text',
+                mode='markers',
                 text=[f"{int(value)}d" for value in stress_df['days_to_risk']],
                 textposition='bottom center',
                 marker=dict(color='#f59e0b', size=10, symbol='diamond'),
@@ -1743,11 +1743,12 @@ def screen_4_fpa_workbench(result):
                 
                 # ✅ Y-AXIS FIX
         stress_chart.update_yaxes(
-                    title_text='Ending Cash ($)',
-                    tickformat=',.0f',
-                    tickprefix='$',
-                    secondary_y=False
-                )
+                title_text='Ending Cash ($)',
+                tickformat=',.0f',
+                tickprefix='$',
+                secondary_y=False,
+                rangemode='tozero'   # 🔥 important
+                    )
                 
         stress_chart.update_yaxes(
                     title_text='Shortfall Probability',
@@ -1755,6 +1756,8 @@ def screen_4_fpa_workbench(result):
                     range=[0, 1.05],
                     secondary_y=True
                 )
+        line=dict(color='#38bdf8', width=3, shape='spline'),
+        marker=dict(size=6)
         
         st.plotly_chart(style_plotly_figure(stress_chart), use_container_width=True, theme=None)
         st.dataframe(
