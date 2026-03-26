@@ -937,13 +937,22 @@ def screen_1_alert_dashboard(result):
                 hovertemplate='<b>Day %{x}</b><br>Daily Burn: $%{y:,.0f}<extra></extra>'
             ))
             fig.update_layout(
-                title='30-Day Cashflow Forecast',
+                title=dict(
+    text='30-Day Cashflow Forecast',
+    x=0.05,   # moves slightly right
+    xanchor='left'
+)
+                margin=dict(l=60, r=100, t=60, b=50)
+                
                 xaxis_title='Day',
+                df_forecast['Daily Burn'] = df_forecast['Daily Burn'] * 1000  # or whatever scale
                 yaxis=dict(
-                    title='Daily Burn ($)',  # Updated y-axis label for clarity
-                    title_standoff=30,  # Increased spacing for better readability
-                    tickformat=',.0f',  # Ensure Y-axis values match the graph data
-                    tickprefix='$',  # Add dollar sign prefix to Y-axis values
+    title='Daily Burn ($)',
+    title_standoff=40,
+    automargin=True,
+    tickformat=',.2f',
+    tickprefix='$',
+)
                     showgrid=True,
                     gridcolor='rgba(148, 163, 184, 0.2)',
                     gridwidth=1,
@@ -954,10 +963,12 @@ def screen_1_alert_dashboard(result):
                 height=300,
                 hovermode='x unified',
                 legend=dict(
-                    x=1.1,  # Move legend further away from the graph
-                    y=1,
-                    xanchor='left',
-                    yanchor='top',
+    x=1,
+    y=1,
+    xanchor='right',
+    yanchor='top',
+    bgcolor='rgba(0,0,0,0)'
+)
                     font=dict(size=14)  # Increase font size for better readability
                 )
             )
