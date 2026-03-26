@@ -1742,14 +1742,14 @@ def screen_4_fpa_workbench(result):
                 )
                 
                 # ✅ Y-AXIS FIX
-                stress_chart.update_yaxes(
+        stress_chart.update_yaxes(
                     title_text='Ending Cash ($)',
                     tickformat=',.0f',
                     tickprefix='$',
                     secondary_y=False
                 )
                 
-                stress_chart.update_yaxes(
+        stress_chart.update_yaxes(
                     title_text='Shortfall Probability',
                     tickformat='.0%',
                     range=[0, 1.05],
