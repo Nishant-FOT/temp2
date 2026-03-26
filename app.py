@@ -1686,8 +1686,7 @@ def screen_4_fpa_workbench(result):
                 x=stress_df['scenario'],
                 y=stress_df['shortfall_probability'],
                 mode='lines+markers',
-                text=[f"{value:.0%}" for value in stress_df['shortfall_probability']],
-                textposition='top center',
+                
                 line=dict(color='#38bdf8', width=3, shape='spline'),
                 name='Shortfall Probability'
             ),
@@ -1698,8 +1697,7 @@ def screen_4_fpa_workbench(result):
                 x=stress_df['scenario'],
                 y=stress_df['days_to_risk'],
                 mode='markers',
-                text=[f"{int(value)}d" for value in stress_df['days_to_risk']],
-                textposition='bottom center',
+                
                 marker=dict(color='#f59e0b', size=10, symbol='diamond'),
                 name='Days to Risk'
             ),
@@ -1708,56 +1706,45 @@ def screen_4_fpa_workbench(result):
         stress_chart.update_layout(
                     title=dict(
                         text='ARIMA-Based Treasury Stress Test',
-                        x=0.05,
-                        xanchor='left'
+                        x=0.05
                     ),
                 
                     xaxis=dict(
-                        title=dict(
-                            text='Scenario',
-                            standoff=20
-                        )
+                        title=dict(text='Scenario', standoff=25)
                     ),
                 
-                    height=320,
+                    height=350,
                 
-                    margin=dict(
-                        l=70,
-                        r=70,
-                        t=80,
-                        b=60
-                    ),
+                    margin=dict(l=80, r=80, t=90, b=70),
                 
                     hovermode='x unified',
                 
                     legend=dict(
                         orientation='h',
-                        y=1.15,
-                        x=0,
-                        xanchor='left',
-                        yanchor='bottom'
-                    ),
-                
-                    font=dict(size=13)
+                        y=1.2,
+                        x=0
+                    )
                 )
                 
                 # ✅ Y-AXIS FIX
         stress_chart.update_yaxes(
-                title_text='Ending Cash ($)',
-                tickformat=',.0f',
-                tickprefix='$',
-                secondary_y=False,
-                rangemode='tozero'   # 🔥 important
-                    )
+                    title_text='Ending Cash ($)',
+                    tickformat=',.0f',
+                    tickprefix='$',
+                    secondary_y=False,
+                    range=[
+                        min(stress_df['end_cash']) * 1.2,
+                        max(stress_df['end_cash']) * 1.2
+                    ]   # 🔥 FIX: dynamic range
+                )
                 
         stress_chart.update_yaxes(
                     title_text='Shortfall Probability',
                     tickformat='.0%',
-                    range=[0, 1.05],
+                    range=[0, 1],
                     secondary_y=True
                 )
-        line=dict(color='#38bdf8', width=3, shape='spline'),
-        marker=dict(size=6)
+        
         st.plotly_chart(style_plotly_figure(stress_chart), use_container_width=True, theme=None)
         st.dataframe(
             stress_df.style.format({
