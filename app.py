@@ -1667,6 +1667,8 @@ def screen_4_fpa_workbench(result):
             hide_index=True
         )
 
+    
+
     stress_testing = fpa.get('stress_testing', [])
 
     if stress_testing:
@@ -1754,18 +1756,31 @@ def screen_4_fpa_workbench(result):
             # -------------------------------
             # 🧭 AXES CONFIGURATION
             # -------------------------------
-            
+            yaxis=dict(
+                title='Ending Cash ($)',
+                tickformat=',.0f',
+                tickprefix='$',
+                range=[min_val - padding, max_val + padding],
+                zeroline=True,
+                zerolinewidth=2
+            ),
 
             yaxis2=dict(
                 title='Shortfall Probability',
                 tickformat='.0%',
                 range=[0, 1],
                 overlaying='y',
-                side='right',
-                position=0.95
+                side='right'
             ),
 
-            
+            # 🔥 THIRD AXIS (FIXES YOUR ISSUE)
+            yaxis3=dict(
+                title='Days to Risk',
+                overlaying='y',
+                side='right',
+                position=1.08,
+                showgrid=False
+            ),
 
             xaxis=dict(
                 title='Scenario',
