@@ -968,7 +968,7 @@ def screen_1_alert_dashboard(result):
             
                 legend=dict(
                     orientation='h',   # 🔥 horizontal legend
-                    y=1.15,            # 🔥 move ABOVE chart
+                    y=2.15,            # 🔥 move ABOVE chart
                     x=0,
                     xanchor='left',
                     yanchor='bottom',
