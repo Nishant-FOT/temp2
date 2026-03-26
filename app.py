@@ -947,7 +947,7 @@ def screen_1_alert_dashboard(result):
                 text='Day',
                 standoff=20   # 🔥 pushes label downward
                     )
-                )
+                ),
                 yaxis=dict(
                     title='Daily Burn ($)',
                     title_standoff=40,
