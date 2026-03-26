@@ -945,12 +945,12 @@ def screen_1_alert_dashboard(result):
                 xaxis=dict(
                 title=dict(
                 text='Day',
-                standoff=20   # 🔥 pushes label downward
+                standoff=30   # 🔥 pushes label downward
                     )
                 ),
                 yaxis=dict(
                     title='Daily Burn ($)',
-                    title_standoff=40,
+                    title_standoff=30,
                     automargin=True,
                     tickformat=',.2f',
                     tickprefix='$',
