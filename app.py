@@ -1668,84 +1668,126 @@ def screen_4_fpa_workbench(result):
         )
 
     stress_testing = fpa.get('stress_testing', [])
+
     if stress_testing:
         st.subheader("Stress Testing (ARIMA)")
+
         stress_df = pd.DataFrame(stress_testing)
+
+        # Create subplot with secondary y-axis
         stress_chart = make_subplots(specs=[[{"secondary_y": True}]])
+
+        # -------------------------------
+        # 📊 BAR: Ending Cash
+        # -------------------------------
         stress_chart.add_trace(
             go.Bar(
                 x=stress_df['scenario'],
                 y=stress_df['end_cash'],
                 marker_color=['#64748b', '#38bdf8', '#f59e0b'],
-                name='End Cash'
-            ),
+                name='End Cash',
+                opacity=0.85
+                ),
             secondary_y=False,
-        )
+            )
+
+        # -------------------------------
+        # 📈 LINE: Shortfall Probability
+        # -------------------------------
         stress_chart.add_trace(
             go.Scatter(
                 x=stress_df['scenario'],
                 y=stress_df['shortfall_probability'],
                 mode='lines+markers',
-                
-                line=dict(color='#38bdf8', width=3, shape='spline'),
+                line=dict(color='#38bdf8', width=3, shape='linear'),
+                marker=dict(size=6),
                 name='Shortfall Probability'
             ),
             secondary_y=True,
         )
+
+        # -------------------------------
+        # 💎 SCATTER: Days to Risk (3rd axis)
+        # -------------------------------
         stress_chart.add_trace(
             go.Scatter(
                 x=stress_df['scenario'],
                 y=stress_df['days_to_risk'],
-                mode='markers',
-                
+                mode='markers+text',
                 marker=dict(color='#f59e0b', size=10, symbol='diamond'),
-                name='Days to Risk'
-            ),
-            secondary_y=False,
+                text=stress_df['days_to_risk'],
+                textposition='top center',
+                name='Days to Risk',
+                yaxis='y3'  # 🔥 KEY FIX
+            )
         )
+
+        # -------------------------------
+        # 📏 Dynamic Y-axis scaling (FIXED)
+        # -------------------------------
+        min_val = stress_df['end_cash'].min()
+        max_val = stress_df['end_cash'].max()
+        padding = (max_val - min_val) * 0.2 if max_val != min_val else 1000
+
+        # -------------------------------
+        # 🎨 Layout
+        # -------------------------------
         stress_chart.update_layout(
-                    title=dict(
-                        text='ARIMA-Based Treasury Stress Test',
-                        x=0.05
-                    ),
-                
-                    xaxis=dict(
-                        title=dict(text='Scenario', standoff=25)
-                    ),
-                
-                    height=350,
-                
-                    margin=dict(l=80, r=80, t=90, b=70),
-                
-                    hovermode='x unified',
-                
-                    legend=dict(
-                        orientation='h',
-                        y=1.2,
-                        x=0
-                    )
-                )
-                
-                # ✅ Y-AXIS FIX
-        stress_chart.update_yaxes(
-                    title_text='Ending Cash ($)',
-                    tickformat=',.0f',
-                    tickprefix='$',
-                    secondary_y=False,
-                    range=[
-                        min(stress_df['end_cash']) * 1.2,
-                        max(stress_df['end_cash']) * 1.2
-                    ]   # 🔥 FIX: dynamic range
-                )
-                
-        stress_chart.update_yaxes(
-                    title_text='Shortfall Probability',
-                    tickformat='.0%',
-                    range=[0, 1],
-                    secondary_y=True
-                )
-        
-        st.plotly_chart(style_plotly_figure(stress_chart), use_container_width=True, theme=None)
+            title=dict(
+                text='ARIMA-Based Treasury Stress Test',
+                x=0.05
+            ),
+
+            height=400,
+            margin=dict(l=80, r=100, t=80, b=70),
+
+            hovermode='x unified',
+
+            bargap=0.4,
+
+            legend=dict(
+                orientation='h',
+                y=1.15,
+                x=0
+            ),
+
+            # -------------------------------
+            # 🧭 AXES CONFIGURATION
+            # -------------------------------
+            yaxis=dict(
+                title='Ending Cash ($)',
+                tickformat=',.0f',
+                tickprefix='$',
+                range=[min_val - padding, max_val + padding],
+                zeroline=True,
+                zerolinewidth=2
+            ),
+
+            yaxis2=dict(
+                title='Shortfall Probability',
+                tickformat='.0%',
+                range=[0, 1],
+                overlaying='y',
+                side='right'
+            ),
+
+            # 🔥 THIRD AXIS (FIXES YOUR ISSUE)
+            yaxis3=dict(
+                title='Days to Risk',
+                overlaying='y',
+                side='right',
+                position=1.08,
+                showgrid=False
+            ),
+
+            xaxis=dict(
+                title='Scenario',
+                tickangle=0
+            )
+        )
+
+    # Render chart
+    st.plotly_chart(stress_chart, use_container_width=True)
         st.dataframe(
             stress_df.style.format({
                 'avg_daily_burn': '${:,.0f}',
