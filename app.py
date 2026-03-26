@@ -1775,11 +1775,10 @@ def screen_4_fpa_workbench(result):
 
             # 🔥 THIRD AXIS (FIXES YOUR ISSUE)
             yaxis3=dict(
-                title='Days to Risk',
-                overlaying='y',
+                
                 side='right',
                 position=1,
-                showgrid=False
+                
             ),
 
             xaxis=dict(
