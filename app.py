@@ -1706,10 +1706,39 @@ def screen_4_fpa_workbench(result):
             secondary_y=False,
         )
         stress_chart.update_layout(
-            title='ARIMA-Based Treasury Stress Test',
-            height=320,
-            hovermode='x unified'
-        )
+                title=dict(
+                    text='ARIMA-Based Treasury Stress Test',
+                    x=0.05,
+                    xanchor='left'
+                ),
+            
+                xaxis=dict(
+                    title=dict(
+                        text='Scenario',
+                        standoff=20   # 🔥 fixes alignment
+                    )
+                ),
+            
+                height=320,
+                margin=dict(
+                    l=60,
+                    r=60,
+                    t=80,
+                    b=60
+                ),
+            
+                hovermode='x unified',
+            
+                legend=dict(
+                    orientation='h',   # 🔥 move legend above
+                    y=1.15,
+                    x=0,
+                    xanchor='left',
+                    yanchor='bottom'
+                ),
+            
+                font=dict(size=13)
+            )
         stress_chart.update_yaxes(title_text='Ending Cash ($)', secondary_y=False)
         stress_chart.update_yaxes(title_text='Shortfall Probability', range=[0, 1.05], secondary_y=True)
         st.plotly_chart(style_plotly_figure(stress_chart), use_container_width=True, theme=None)
