@@ -937,35 +937,42 @@ def screen_1_alert_dashboard(result):
                 hovertemplate='<b>Day %{x}</b><br>Daily Burn: $%{y:,.0f}<extra></extra>'
             ))
             fig.update_layout(
-    title=dict(
-        text='30-Day Cashflow Forecast',
-        x=0.05,
-        xanchor='left'
-    ),
-    xaxis_title='Day',
-    yaxis=dict(
-        title='Daily Burn ($)',
-        title_standoff=40,
-        automargin=True,
-        tickformat=',.2f',   # 🔥 FIXED
-        tickprefix='$',
-        showgrid=True,
-        gridcolor='rgba(148, 163, 184, 0.2)',
-    ),
-    height=300,
-    margin=dict(l=60, r=80, t=60, b=50),  # 🔥 FIXED spacing
-    hovermode='x unified',
-    legend=dict(
-        x=1,
-        y=1,
-        xanchor='right',
-        yanchor='top',
-        bgcolor='rgba(0,0,0,0)'
-    )
-
-                    font=dict(size=14)  # Increase font size for better readability
-                )
+                title=dict(
+                    text='30-Day Cashflow Forecast',
+                    x=0.05,
+                    xanchor='left'
+                ),
+                xaxis_title='Day',
+                yaxis=dict(
+                    title='Daily Burn ($)',
+                    title_standoff=40,
+                    automargin=True,
+                    tickformat=',.2f',
+                    tickprefix='$',
+                    showgrid=True,
+                    gridcolor='rgba(148, 163, 184, 0.2)',
+                ),
+                height=300,
+                margin=dict(
+                    l=60,
+                    r=80,
+                    t=60,
+                    b=50
+                ),
+                hovermode='x unified',
             
+                legend=dict(
+                    x=1,
+                    y=1,
+                    xanchor='right',
+                    yanchor='top',
+                    bgcolor='rgba(0,0,0,0)'
+                ),
+            
+                font=dict(   # ✅ FIXED: now correctly inside layout
+                    size=14
+                )
+            )
             st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
 
 
