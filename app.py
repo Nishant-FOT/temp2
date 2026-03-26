@@ -1775,9 +1775,9 @@ def screen_4_fpa_workbench(result):
 
             # 🔥 THIRD AXIS (FIXES YOUR ISSUE)
             yaxis3=dict(
-                
+                showgrid=False,
                 side='right',
-                position=1,
+                position=1
                 
             ),
 
