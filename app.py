@@ -1243,13 +1243,45 @@ def screen_3_cfo_briefing(result):
         fig.add_hrect(y0=-y_axis_limit, y1=0, fillcolor='rgba(239, 68, 68, 0.04)', line_width=0)
         fig.add_hline(y=0, line_dash='dash', line_color='rgba(148, 163, 184, 0.16)')
         fig.update_layout(
-            title='30-Day Cash Balance Scenarios: Baseline vs Recommended Action',
-            xaxis_title='Day',
-            yaxis_title='Cash Balance ($)',
-            height=380,
-            hovermode='x unified',
-            yaxis=dict(range=[-y_axis_limit, y_axis_limit], zeroline=False)
-        )
+                title=dict(
+                    text='30-Day Cash Balance Scenarios<br><sup>Baseline vs Peer vs Recommended Action</sup>',
+                    x=0.05,
+                    xanchor='left'
+                ),
+            
+                xaxis=dict(
+                    title=dict(
+                        text='Day',
+                        standoff=20   # 🔥 fixes "Day" alignment
+                    )
+                ),
+            
+                yaxis=dict(
+                    title='Cash Balance ($)',
+                    title_standoff=40,
+                    automargin=True,
+                    tickformat=',.0f',
+                    tickprefix='$',
+                    range=[-y_axis_limit, y_axis_limit],
+                    zeroline=False
+                ),
+            
+                height=380,
+                margin=dict(l=60, r=80, t=80, b=60),  # 🔥 spacing fix
+            
+                hovermode='x unified',
+            
+                legend=dict(
+                    orientation='h',     # 🔥 move legend ABOVE graph
+                    y=1.15,
+                    x=0,
+                    xanchor='left',
+                    yanchor='bottom',
+                    bgcolor='rgba(0,0,0,0)'
+                ),
+            
+                font=dict(size=13)
+                )
         st.plotly_chart(style_plotly_figure(fig), use_container_width=True, theme=None)
 
         sim_cols = st.columns(3)
@@ -1335,13 +1367,37 @@ def screen_3_cfo_briefing(result):
                     line=dict(color='#2563eb', width=2, dash='dash', shape='spline')
                 ))
             breach_chart.update_layout(
-                title='Cumulative Probability of Cash Breach by Day',
-                xaxis_title='Day',
-                yaxis_title='Probability',
-                yaxis=dict(range=[0, 1.05], tickformat='.0%'),
-                height=300,
-                hovermode='x unified'
-            )
+                    title=dict(
+                        text='Cumulative Probability of Cash Breach<br><sup>Risk Trend Over Time</sup>',
+                        x=0.05
+                    ),
+                
+                    xaxis=dict(
+                        title=dict(
+                            text='Day',
+                            standoff=20
+                        )
+                    ),
+                
+                    yaxis=dict(
+                        title='Probability',
+                        range=[0, 1.05],
+                        tickformat='.0%',
+                        automargin=True
+                    ),
+                
+                    height=300,
+                    margin=dict(l=60, r=60, t=80, b=60),
+                
+                    hovermode='x unified',
+                
+                    legend=dict(
+                        orientation='h',
+                        y=1.15,
+                        x=0,
+                        xanchor='left'
+                    )
+)
             st.plotly_chart(style_plotly_figure(breach_chart), use_container_width=True, theme=None)
     
     # Session metadata
