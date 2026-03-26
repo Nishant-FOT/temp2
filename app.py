@@ -1682,7 +1682,7 @@ def screen_4_fpa_workbench(result):
             secondary_y=False,
         )
        stress_chart.add_trace(
-            go.Scatter(
+                go.Scatter(
                 x=stress_df['scenario'],
                 y=stress_df['shortfall_probability'],
                 mode='lines+markers',
@@ -1690,11 +1690,11 @@ def screen_4_fpa_workbench(result):
                 textposition='top center',
                 line=dict(color='#38bdf8', width=3, shape='spline'),
                 name='Shortfall Probability'
-            ),
-            secondary_y=True,
-        )
+                ),
+                secondary_y=True,
+            )
         stress_chart.add_trace(
-            go.Scatter(
+                go.Scatter(
                 x=stress_df['scenario'],
                 y=stress_df['days_to_risk'],
                 mode='markers',
@@ -1702,44 +1702,44 @@ def screen_4_fpa_workbench(result):
                 textposition='bottom center',
                 marker=dict(color='#f59e0b', size=10, symbol='diamond'),
                 name='Days to Risk'
-            ),
+                ),
             secondary_y=False,
         )
         stress_chart.update_layout(
-                    title=dict(
+                        title=dict(
                         text='ARIMA-Based Treasury Stress Test',
                         x=0.05,
                         xanchor='left'
-                    ),
+                            ),
                 
-                    xaxis=dict(
-                        title=dict(
+                        xaxis=dict(
+                            title=dict(
                             text='Scenario',
                             standoff=20
+                            )
+                            ),
+                    
+                            height=320,
+                        
+                            margin=dict(
+                                l=70,
+                                r=70,
+                                t=80,
+                                b=60
+                            ),
+                        
+                            hovermode='x unified',
+                        
+                            legend=dict(
+                                orientation='h',
+                                y=1.15,
+                                x=0,
+                                xanchor='left',
+                                yanchor='bottom'
+                            ),
+                        
+                            font=dict(size=13)
                         )
-                    ),
-                
-                    height=320,
-                
-                    margin=dict(
-                        l=70,
-                        r=70,
-                        t=80,
-                        b=60
-                    ),
-                
-                    hovermode='x unified',
-                
-                    legend=dict(
-                        orientation='h',
-                        y=1.15,
-                        x=0,
-                        xanchor='left',
-                        yanchor='bottom'
-                    ),
-                
-                    font=dict(size=13)
-                )
                 
                 # ✅ Y-AXIS FIX
         stress_chart.update_yaxes(
