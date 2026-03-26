@@ -1788,7 +1788,7 @@ def screen_4_fpa_workbench(result):
 
     # Render chart
     st.plotly_chart(stress_chart, use_container_width=True)
-        st.dataframe(
+    st.dataframe(
             stress_df.style.format({
                 'avg_daily_burn': '${:,.0f}',
                 'end_cash': '${:,.0f}',
