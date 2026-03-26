@@ -1497,7 +1497,28 @@ def screen_4_fpa_workbench(result):
             color_continuous_scale='RdYlGn_r',
             title='Month-to-Date Budget Variance by Category'
         )
-        chart.update_layout(height=300)
+        chart.update_layout(
+                title=dict(
+                    text='Month-to-Date Budget Variance by Category',
+                    x=0.05
+                ),
+                xaxis=dict(
+                    title=dict(text='Category', standoff=20)
+                ),
+                yaxis=dict(
+                    title='Variance ($)',
+                    automargin=True,
+                    tickformat=',.0f',
+                    tickprefix='$'
+                ),
+                height=300,
+                margin=dict(l=60, r=60, t=80, b=60),
+                legend=dict(
+                    orientation='h',
+                    y=1.15,
+                    x=0
+                )
+)
         st.plotly_chart(style_plotly_figure(chart), use_container_width=True, theme=None)
         st.dataframe(
             variance_df.style.format({
@@ -1541,10 +1562,27 @@ def screen_4_fpa_workbench(result):
             marker_color=['#64748b', '#38bdf8', '#f59e0b']
         ))
         scenario_chart.update_layout(
-            title='Scenario Comparison: 30-Day Ending Cash',
-            yaxis_title='Cash ($)',
-            height=300
-        )
+                title=dict(
+                    text='Scenario Comparison: 30-Day Ending Cash',
+                    x=0.05
+                ),
+                xaxis=dict(
+                    title=dict(text='Scenario', standoff=20)
+                ),
+                yaxis=dict(
+                    title='Cash ($)',
+                    automargin=True,
+                    tickformat=',.0f',
+                    tickprefix='$'
+                ),
+                height=300,
+                margin=dict(l=60, r=60, t=80, b=60),
+                legend=dict(
+                    orientation='h',
+                    y=1.15,
+                    x=0
+                )
+            )
         st.plotly_chart(style_plotly_figure(scenario_chart), use_container_width=True, theme=None)
 
     sensitivity_analysis = fpa.get('sensitivity_analysis', [])
@@ -1562,11 +1600,27 @@ def screen_4_fpa_workbench(result):
             name='Ending Cash'
         ))
         sensitivity_chart.update_layout(
-            title='Ending Cash Sensitivity to Burn Rate Changes',
-            xaxis_title='Sensitivity Scenario',
-            yaxis_title='30d End Cash ($)',
-            height=300
-        )
+                title=dict(
+                    text='Ending Cash Sensitivity to Burn Rate Changes',
+                    x=0.05
+                ),
+                xaxis=dict(
+                    title=dict(text='Sensitivity Scenario', standoff=20)
+                ),
+                yaxis=dict(
+                    title='30d End Cash ($)',
+                    automargin=True,
+                    tickformat=',.0f',
+                    tickprefix='$'
+                ),
+                height=300,
+                margin=dict(l=60, r=60, t=80, b=60),
+                legend=dict(
+                    orientation='h',
+                    y=1.15,
+                    x=0
+                )
+            )
         st.plotly_chart(style_plotly_figure(sensitivity_chart), use_container_width=True, theme=None)
         st.dataframe(
             sensitivity_df.style.format({
