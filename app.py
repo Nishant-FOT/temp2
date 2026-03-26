@@ -942,7 +942,12 @@ def screen_1_alert_dashboard(result):
                     x=0.05,
                     xanchor='left'
                 ),
-                xaxis_title='Day',
+                xaxis=dict(
+                title=dict(
+                text='Day',
+                standoff=20   # 🔥 pushes label downward
+                    )
+                )
                 yaxis=dict(
                     title='Daily Burn ($)',
                     title_standoff=40,
@@ -962,12 +967,13 @@ def screen_1_alert_dashboard(result):
                 hovermode='x unified',
             
                 legend=dict(
-                    x=1,
-                    y=1,
-                    xanchor='right',
-                    yanchor='top',
+                    orientation='h',   # 🔥 horizontal legend
+                    y=1.15,            # 🔥 move ABOVE chart
+                    x=0,
+                    xanchor='left',
+                    yanchor='bottom',
                     bgcolor='rgba(0,0,0,0)'
-                ),
+                        ),
             
                 font=dict(   # ✅ FIXED: now correctly inside layout
                     size=14
