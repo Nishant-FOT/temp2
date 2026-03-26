@@ -1706,39 +1706,55 @@ def screen_4_fpa_workbench(result):
             secondary_y=False,
         )
         stress_chart.update_layout(
-                title=dict(
-                    text='ARIMA-Based Treasury Stress Test',
-                    x=0.05,
-                    xanchor='left'
-                ),
-            
-                xaxis=dict(
                     title=dict(
-                        text='Scenario',
-                        standoff=20   # 🔥 fixes alignment
-                    )
-                ),
-            
-                height=320,
-                margin=dict(
-                    l=60,
-                    r=60,
-                    t=80,
-                    b=60
-                ),
-            
-                hovermode='x unified',
-            
-                legend=dict(
-                    orientation='h',   # 🔥 move legend above
-                    y=1.15,
-                    x=0,
-                    xanchor='left',
-                    yanchor='bottom'
-                ),
-            
-                font=dict(size=13)
-            )
+                        text='ARIMA-Based Treasury Stress Test',
+                        x=0.05,
+                        xanchor='left'
+                    ),
+                
+                    xaxis=dict(
+                        title=dict(
+                            text='Scenario',
+                            standoff=20
+                        )
+                    ),
+                
+                    height=320,
+                
+                    margin=dict(
+                        l=70,
+                        r=70,
+                        t=80,
+                        b=60
+                    ),
+                
+                    hovermode='x unified',
+                
+                    legend=dict(
+                        orientation='h',
+                        y=1.15,
+                        x=0,
+                        xanchor='left',
+                        yanchor='bottom'
+                    ),
+                
+                    font=dict(size=13)
+                )
+                
+                # ✅ Y-AXIS FIX
+                stress_chart.update_yaxes(
+                    title_text='Ending Cash ($)',
+                    tickformat=',.0f',
+                    tickprefix='$',
+                    secondary_y=False
+                )
+                
+                stress_chart.update_yaxes(
+                    title_text='Shortfall Probability',
+                    tickformat='.0%',
+                    range=[0, 1.05],
+                    secondary_y=True
+                )
         stress_chart.update_yaxes(title_text='Ending Cash ($)', secondary_y=False)
         stress_chart.update_yaxes(title_text='Shortfall Probability', range=[0, 1.05], secondary_y=True)
         st.plotly_chart(style_plotly_figure(stress_chart), use_container_width=True, theme=None)
@@ -2069,10 +2085,44 @@ def screen_7_strategic_planning(result):
         marker_color=['#64748b', '#38bdf8', '#f59e0b', '#7dd3fc']
     ))
     outcome_chart.update_layout(
-        title='Strategic Planning Outcomes',
-        height=300,
-        yaxis_title='Value'
-    )
+            title=dict(
+                text='Strategic Planning Outcomes',
+                x=0.05,
+                xanchor='left'
+            ),
+        
+            xaxis=dict(
+                title=dict(
+                    text='Scenario',
+                    standoff=20
+                )
+            ),
+        
+            yaxis=dict(
+                title='Value',
+                automargin=True,
+                tickformat=',.0f'
+            ),
+        
+            height=300,
+        
+            margin=dict(
+                l=60,
+                r=60,
+                t=80,
+                b=60
+            ),
+        
+            hovermode='x unified',
+        
+            legend=dict(
+                orientation='h',
+                y=1.15,
+                x=0
+            ),
+        
+            font=dict(size=13)
+        )
     st.plotly_chart(style_plotly_figure(outcome_chart), use_container_width=True, theme=None)
 
     st.info(
