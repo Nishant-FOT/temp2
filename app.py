@@ -1776,7 +1776,7 @@ def screen_4_fpa_workbench(result):
                 title='Days to Risk',
                 overlaying='y',
                 side='right',
-                position=1.08,
+                position=0.95,
                 showgrid=False
             ),
 
